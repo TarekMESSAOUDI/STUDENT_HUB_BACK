@@ -19,38 +19,38 @@ emploisRouter.route("/")
     res.status(201).send(emplois)
 })
 emploisRouter.route('/:id')
-    // get emplois by id
-    //http://localhost:9091/emplois/id
-    .get((req,res)=>{
-        Emplois.findById(req.params.id, (err,emplois)=>{
-            if (err) {
-                res.sendStatus(400).json({msg: 'No Emplois found with this ID'})
+// get emplois by id
+//http://localhost:9091/emplois/id
+.get((req,res)=>{
+    Emplois.findById(req.params.id, (err,emplois)=>{
+        if (err) {
+            res.sendStatus(400).json({msg: 'No Emplois found with this ID'})
+        }
+        res.json(emplois)
+    })
+})
+// update emplois
+//http://localhost:9091/emplois/id
+.put((req,res) => {
+    Emplois.findById(req.params.id, (err, emplois) => {
+        emplois.nom = req.body.nom
+        emplois.save()
+        res.json(emplois)
+    }) 
+})
+// delete emplois
+//http://localhost:9091/emplois/id
+.delete((req,res)=>{
+    Emplois.findById(req.params.id, (err, emplois) => {
+        emplois.delete(err => {
+            if(err){
+                res.status(500).send(err)
             }
-            res.json(emplois)
+            else{
+                res.status(204).send('removed')
+            }
         })
     })
-    // update emplois
-    //http://localhost:9091/emplois/id
-    .put((req,res) => {
-        Emplois.findById(req.params.id, (err, emplois) => {
-            emplois.nom = req.body.nom
-            emplois.save()
-            res.json(emplois)
-        }) 
-    })
-    // delete emplois
-    //http://localhost:9091/emplois/id
-    .delete((req,res)=>{
-        Emplois.findById(req.params.id, (err, emplois) => {
-            emplois.delete(err => {
-                if(err){
-                    res.status(500).send(err)
-                }
-                else{
-                    res.status(204).send('removed')
-                }
-            })
-        })
-    })
+})
 
 module.exports=emploisRouter
