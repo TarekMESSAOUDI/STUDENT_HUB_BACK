@@ -1,0 +1,4 @@
+const TYPETACHE = {
+    SEANCE:"SEANCE",
+    EVENEMENT:"EVENEMENT",
+}
