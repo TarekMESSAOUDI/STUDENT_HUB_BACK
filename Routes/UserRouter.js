@@ -3,6 +3,7 @@ const userRouter = express.Router()
 const User = require("../Models/UserModel")
 
 userRouter.route("/")
+//test
 //get all users
 //http://localhost:9091/User
 .get((req,res)=>{
