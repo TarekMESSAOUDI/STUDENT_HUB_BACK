@@ -3,16 +3,16 @@ const contactRouter = express.Router();
 const nodemailer = require('nodemailer');
 app = express();
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth:{
-        user: 'tarek.messaoudi@esprit.tn',
-        pass: 'curvanord193JMT5213'
-    }
-});
-
 contactRouter.route("/")
 .post((req,res)=>{
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth:{
+            user: req.body.from,
+            pass: req.body.pass,
+        }
+    });
 
     const mailOptions = {
         from: 'tarek.messaoudi@esprit.tn',
