@@ -5,10 +5,7 @@ const blogModel=new Schema({
     titre:{type:String,required:true},
     description:{type:String,required:true},
     date:{type:Date,default:new Date()},
-    image:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Image"
-    },
+    image:{type:String},
     commentaire:[
         {
             type: mongoose.Schema.Types.ObjectId,
