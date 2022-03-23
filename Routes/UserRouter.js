@@ -25,6 +25,31 @@ const image = multer({
     fileFilter: fileFilter
 });
 
+userRouter.post("/SignUp",(request,response)=>{
+    const signedUpuser= new User({
+        nom:request.body.nom,
+        prenom:request.body.prenom, 
+        titre:request.body.titre,
+        email:request.body.email,
+        tel:request.body.tel,
+        cin:request.body.cin,
+        adrresse:request.body.adresse,
+        mdp:request.body.mdp,
+        confirmMdp:request.body.confirmMdp,
+        desactiver:request.body.desactiver,
+        resettoken:request.body.resettoken,
+        disponibilite:request.body.disponibilite,
+        rang:request.body.rang,
+        sex:request.body.sex,   
+    })
+    signedUpuser.save().then(data =>{
+        response.json(data)
+    })
+    .then(error =>{
+        response.json(error)
+    })
+})
+
 userRouter.route("/")
 //http://localhost:9091/User
 .get((req, res) => {
@@ -82,7 +107,6 @@ userRouter.route('/:id')
     });
 });
 
-//http://localhost:9091/User/id
 userRouter.route('/:id')
 .delete((req, res) => {
     User.findById(req.params.id, (err, user) => {
