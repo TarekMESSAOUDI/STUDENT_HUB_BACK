@@ -30,4 +30,4 @@ let userModel=new Schema({
         },
 });
 
-module.exports = mongoose.model("User", userModel)
+module.exports = mongoose.model("Users", userModel)
