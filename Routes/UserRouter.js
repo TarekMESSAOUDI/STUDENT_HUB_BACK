@@ -71,7 +71,7 @@ userRouter.route('/:id')
         user.mdp = req.body.mdp
         user.confirmMdp = req.body.confirmMdp
         user.rang = req.body.rang
-        user.image = req.file.path
+        user.image = req.file.image
         user.sex = req.body.sex
         user.save();
         if(err){

@@ -30,9 +30,9 @@ blogRouter.route("/")
 .get((req,res)=>{
     Blog.find({},(err,users)=>{
         if(err){
-            res.send(400).json(err);
+            res.status(400).json(err);
         } else {
-            res.json(users);
+            res.status(200).json(users);
         }
     });
 });
