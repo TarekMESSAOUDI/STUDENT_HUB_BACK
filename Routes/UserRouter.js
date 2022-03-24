@@ -169,25 +169,10 @@ userRouter.route("/Etudiant")
 
 userRouter.route("/Etudiant")
 //http://localhost:9091/User/Etudiant
-.post((req, res) => {
+.post(image.single("image"),(req, res) => {
     req.body.role = "ETUDIANT"
-    let user = new User(req.body)
-    user.nom = req.body.nom
-    user.prenom = req.body.prenom
-    user.titre = req.body.titre
-    user.email = req.body.email
-    user.tel = req.body.tel
-    user.cin = req.body.cin
-    user.addresse.ville = req.body.addresse.ville
-    user.addresse.rue = req.body.addresse.rue
-    user.addresse.codePostal = req.body.addresse.codePostal
-    user.dateNaissance = req.body.dateNaissance
-    user.mdp = req.body.mdp
-    user.confirmMdp = req.body.confirmMdp
-    user.disponibilite = req.body.disponibilite
-    user.rang = req.body.rang
-    user.image = req.body.image
-    user.sex = req.body.sex
+    let user = new User(req.body);
+    user.image = req.file.originalname;
     user.save()
     res.status(201).send("Etudiant Ajouté avec Succès :)")
 });
