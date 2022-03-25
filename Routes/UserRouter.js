@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const User = require("../Models/UserModel");
 const multer = require("multer");
+const { db } = require("../Models/UserModel");
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/User/');
@@ -88,19 +89,12 @@ userRouter.route('/:id')
 
 userRouter.route('/:id')
 //http://localhost:9091/User/id
-.put((req, res) => {
+.put((req,res) => {
     User.findById(req.params.id, (err, user) => {
-        user.nom = req.body.nom
-        user.prenom = req.body.prenom
-        user.titre = req.body.titre
-        user.mdp = req.body.mdp
-        user.confirmMdp = req.body.confirmMdp
-        user.rang = req.body.rang
-        user.image = req.file.image
-        user.sex = req.body.sex
         user.save();
         if(err){
-            res.status(400).json(err);
+            res.send(err);
+            console.log(err);
         } else {
             res.json(user);
         }
