@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const User = require("../Models/UserModel");
 const multer = require("multer");
+const { db } = require("../Models/UserModel");
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/User/');
@@ -10,6 +11,7 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+
 const fileFilter = (req, file, cb)=>{
     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png'){
     cb(null, true);
@@ -24,6 +26,9 @@ const image = multer({
     },
     fileFilter: fileFilter
 });
+
+var upload = multer({storage : storage})
+var multipleUpload = upload.fields([{name:"profileImage"},{name:"coverImage"},{name:"profileImage"}])
 
 userRouter.post("/SignUp",(request,response)=>{
     const signedUpuser= new User({
@@ -88,19 +93,13 @@ userRouter.route('/:id')
 
 userRouter.route('/:id')
 //http://localhost:9091/User/id
-.put((req, res) => {
+.put((req,res) => {
     User.findById(req.params.id, (err, user) => {
-        user.nom = req.body.nom
-        user.prenom = req.body.prenom
-        user.titre = req.body.titre
-        user.mdp = req.body.mdp
-        user.confirmMdp = req.body.confirmMdp
-        user.rang = req.body.rang
-        user.image = req.file.image
-        user.sex = req.body.sex
+        this.user = new User(req.body)
         user.save();
         if(err){
-            res.status(400).json(err);
+            res.sendStatus(400).json(err);
+            console.log(err);
         } else {
             res.json(user);
         }
@@ -169,10 +168,10 @@ userRouter.route("/Etudiant")
 
 userRouter.route("/Etudiant")
 //http://localhost:9091/User/Etudiant
-.post(image.single("image"),(req, res) => {
+.post(image.single("profileImage"),(req, res) => {
     req.body.role = "ETUDIANT"
     let user = new User(req.body);
-    user.image = req.file.originalname;
+    user.profileImage = req.file.originalname;
     user.save()
     res.status(201).send("Etudiant Ajouté avec Succès :)")
 });

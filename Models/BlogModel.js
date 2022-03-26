@@ -8,7 +8,7 @@ const blogModel=new Schema({
     image:{type:String},
     commentaire:[
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.Array,
             ref: "Commentaire"
         }
     ],
