@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+
 const fileFilter = (req, file, cb)=>{
     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png'){
     cb(null, true);
@@ -25,6 +26,9 @@ const image = multer({
     },
     fileFilter: fileFilter
 });
+
+var upload = multer({storage : storage})
+var multipleUpload = upload.fields([{name:"profileImage"},{name:"coverImage"},{name:"profileImage"}])
 
 userRouter.post("/SignUp",(request,response)=>{
     const signedUpuser= new User({
@@ -91,9 +95,10 @@ userRouter.route('/:id')
 //http://localhost:9091/User/id
 .put((req,res) => {
     User.findById(req.params.id, (err, user) => {
+        this.user = new User(req.body)
         user.save();
         if(err){
-            res.send(err);
+            res.sendStatus(400).json(err);
             console.log(err);
         } else {
             res.json(user);
@@ -163,10 +168,10 @@ userRouter.route("/Etudiant")
 
 userRouter.route("/Etudiant")
 //http://localhost:9091/User/Etudiant
-.post(image.single("image"),(req, res) => {
+.post(image.single("profileImage"),(req, res) => {
     req.body.role = "ETUDIANT"
     let user = new User(req.body);
-    user.image = req.file.originalname;
+    user.profileImage = req.file.originalname;
     user.save()
     res.status(201).send("Etudiant Ajouté avec Succès :)")
 });
