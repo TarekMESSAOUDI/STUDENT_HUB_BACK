@@ -11,7 +11,6 @@ const commentaireRouter = require('./Routes/CommentaireRouter')
 const emploisRouter = require('./Routes/EmploisRouter')
 const tacheRouter = require('./Routes/TacheRouter')
 const contactRouter = require('./Routes/ContactRouter')
-const skillsRouter = require('./Routes/SkillsRouter')
 
 mongoose.connect('mongodb://localhost:27017/StudentHub', {useNewUrlParser: true})
 
@@ -28,6 +27,5 @@ app.use('/Commentaire', commentaireRouter)
 app.use('/Emplois', emploisRouter)
 app.use('/Tache', tacheRouter)
 app.use('/Contact', contactRouter)
-app.use('/Skills', skillsRouter)
 
 app.listen(port, ()=>{ console.log(`http://localhost:${port}`)})

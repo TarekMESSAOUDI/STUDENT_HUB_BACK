@@ -2,7 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const User = require("../Models/UserModel");
 const multer = require("multer");
-const { db } = require("../Models/UserModel");
+
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/User/');
@@ -19,6 +19,7 @@ const fileFilter = (req, file, cb)=>{
     cb(new Error("le fichier doit etre jpeg, jpg ou png"), null, false);
     }
 };
+
 const image = multer({
     storage: storage, 
     limits:{
@@ -26,9 +27,6 @@ const image = multer({
     },
     fileFilter: fileFilter
 });
-
-var upload = multer({storage : storage})
-var multipleUpload = upload.fields([{name:"profileImage"},{name:"coverImage"},{name:"profileImage"}])
 
 userRouter.post("/SignUp",(request,response)=>{
     const signedUpuser= new User({
@@ -55,8 +53,8 @@ userRouter.post("/SignUp",(request,response)=>{
     })
 })
 
-userRouter.route("/")
-//http://localhost:9091/User
+userRouter.route("/getAll")
+//http://localhost:9091/User/getAll
 .get((req, res) => {
     User.find({}, (err, users) => {
         if (err) { 
@@ -79,8 +77,8 @@ userRouter.route("/Count")
     });
 });
 
-userRouter.route('/:id')
-//http://localhost:9091/User/id
+userRouter.route('/getById/:id')
+//http://localhost:9091/User/getById/id
 .get((req, res) => {
     User.findById(req.params.id, (err, user) => {
         if (err) {
@@ -91,22 +89,8 @@ userRouter.route('/:id')
     });
 });
 
-userRouter.route('/:id')
-//http://localhost:9091/User/id
-.put((req,res) => {
-    User.findById(req.params.id, (err, user) => {
-        this.user = new User(req.body)
-        user.save();
-        if(err){
-            res.sendStatus(400).json(err);
-            console.log(err);
-        } else {
-            res.json(user);
-        }
-    });
-});
-
-userRouter.route('/:id')
+userRouter.route('delete/:id')
+//http://localhost:9091/User/delete/id
 .delete((req, res) => {
     User.findById(req.params.id, (err, user) => {
         user.delete(err => {
@@ -120,9 +104,23 @@ userRouter.route('/:id')
     });
 });
 
+
+userRouter.route('/:id')
+//http://localhost:9091/User/id
+.put((req,res) => {
+    User.findById(req.params.id, (err, user) => {
+        user.save();
+        if(err){
+            res.sendStatus(400).json(err)
+        } else {
+            res.sendStatus(200).json(user)
+        }
+    });
+});
+
 //Universite    
-userRouter.route("/Universite")
-//http://localhost:9091/User/Universite
+userRouter.route("/Universite/getAll")
+//http://localhost:9091/User/Universite/getAll
 .get((req, res) => {
     User.find({role: "UNIVERSITE"}, (err, universities) => {
         if (err) { 
@@ -133,29 +131,19 @@ userRouter.route("/Universite")
     });
 });
 
-//http://localhost:9091/User/Universite
-userRouter.route("/Universite")
+userRouter.route("/Universite/add")
+//http://localhost:9091/User/Universite/add
 .post(image.single("image"),(req, res) => {
     req.body.role = "UNIVERSITE"
     let user = new User(req.body)
-    user.nom = req.body.nom
-    user.titre = req.body.titre
-    user.email = req.body.email
-    user.cin = req.body.cin
-    user.tel = req.body.tel
-    user.image = req.file.path
-    user.ville = req.body.ville
-    user.rue = req.body.rue
-    user.codePostal = req.body.codePostal
-    user.mdp = req.body.mdp
-    user.confirmMdp = req.body.confirmMdp
+    user.profileImage = req.file.originalname
     user.save()
     res.status(201).json("Université Ajouté avec Succes :)")
 });
 
 //Etudiant    
-userRouter.route("/Etudiant")
-//http://localhost:9091/User/Etudiant
+userRouter.route("/Etudiant/getAll")
+//http://localhost:9091/User/Etudiant/getAll
 .get((req, res) => {
     User.find({role: "ETUDIANT"}, (err, etudiants) => {
         if (err) { 
@@ -166,8 +154,8 @@ userRouter.route("/Etudiant")
     });
 });
 
-userRouter.route("/Etudiant")
-//http://localhost:9091/User/Etudiant
+userRouter.route("/Etudiant/add")
+//http://localhost:9091/User/Etudiant/add
 .post(image.single("profileImage"),(req, res) => {
     req.body.role = "ETUDIANT"
     let user = new User(req.body);
@@ -176,9 +164,40 @@ userRouter.route("/Etudiant")
     res.status(201).send("Etudiant Ajouté avec Succès :)")
 });
 
+userRouter.route("/Image/cover/:id")
+//http://localhost:9091/User/Image/cover/id
+.put(image.single("coverImage"),(req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        user.coverImage = req.file.originalname;
+        user.save();
+        if(err){
+            res.sendStatus(400).json(err);
+            console.log(err);
+        } else {
+            res.json(user);
+        }
+    });
+});
+
+
+userRouter.route("/Image/institut/:id")
+//http://localhost:9091/User/Image/institut/id
+.put(image.single("institutImage"),(req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        user.institutImage = req.file.originalname;
+        user.save();
+        if(err){
+            res.sendStatus(400).json(err);
+            console.log(err);
+        } else {
+            res.json(user);
+        }
+    });
+});
+
 //Enseigant    
-userRouter.route("/Enseignant")
-//http://localhost:9091/User/Enseigant
+userRouter.route("/Enseignant/getAll")
+//http://localhost:9091/User/Enseigant/getAll
 .get((req, res) => {
     User.find({role: "ENSEIGNANT"}, (err, enseignants) => {
         if (err) { 
@@ -189,34 +208,18 @@ userRouter.route("/Enseignant")
     });
 });
 
-//http://localhost:9091/User/Enseignant
-userRouter.route("/Enseignant")
+userRouter.route("/Enseignant/add")
+//http://localhost:9091/User/Enseignant/add
 .post((req, res) => {
     req.body.role = "ENSEIGNANT"
     let user = new User(req.body)
-    user.nom = req.body.nom
-    user.prenom = req.body.prenom
-    user.titre = req.body.titre
-    user.email = req.body.email
-    user.tel = req.body.tel
-    user.cin = req.body.cin
-    user.addresse.ville = req.body.addresse.ville
-    user.addresse.rue = req.body.addresse.rue
-    user.addresse.codePostal = req.body.addresse.codePostal
-    user.dateNaissance = req.body.dateNaissance
-    user.mdp = req.body.mdp
-    user.confirmMdp = req.body.confirmMdp
-    user.disponibilite = req.body.disponibilite
-    user.rang = req.body.rang
-    user.image = req.body.image
-    user.sex = req.body.sex
     user.save()
     res.status(201).send("Enseignant Ajouté avec Succes :)")
 });
 
 //Club    
-userRouter.route("/Club")
-//http://localhost:9091/User/Club
+userRouter.route("/Club/getAll")
+//http://localhost:9091/User/Club/getAll
 .get((req, res) => {
     User.find({role: "CLUB"}, (err, club) => {
         if (err) { 
@@ -227,27 +230,11 @@ userRouter.route("/Club")
     });
 });
 
-userRouter.route("/Club")
-//http://localhost:9091/User/Club
+userRouter.route("/Club/add")
+//http://localhost:9091/User/Club/add
 .post((req, res) => {
     req.body.role = "CLUB"
     let user = new User(req.body)
-    user.nom = req.body.nom
-    user.prenom = req.body.prenom
-    user.titre = req.body.titre
-    user.email = req.body.email
-    user.tel = req.body.tel
-    user.cin = req.body.cin
-    user.addresse.ville = req.body.addresse.ville
-    user.addresse.rue = req.body.addresse.rue
-    user.addresse.codePostal = req.body.addresse.codePostal
-    user.dateNaissance = req.body.dateNaissance
-    user.mdp = req.body.mdp
-    user.confirmMdp = req.body.confirmMdp
-    user.disponibilite = req.body.disponibilite
-    user.rang = req.body.rang
-    user.image = req.body.image
-    user.sex = req.body.sex
     user.save()
     res.status(201).send("Club Ajouté avec Succes :)")
 });
