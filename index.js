@@ -2,6 +2,7 @@ const express = require('express')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const cors =require("cors");
 const app = express()
 const port = 9091
 const userRouter = require('./Routes/UserRouter')
@@ -13,6 +14,7 @@ const contactRouter = require('./Routes/ContactRouter')
 
 mongoose.connect('mongodb://localhost:27017/StudentHub', {useNewUrlParser: true})
 
+app.use(cors());
 app.use(logger('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
