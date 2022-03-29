@@ -31,6 +31,7 @@ let userModel=new Schema({
     skills3:{type: String},
     skills4:{type: String},
     softSkills:{type:String},
+    paye:{type:String},
     sex:{
             type: SEX,
             ref: "Sex"
