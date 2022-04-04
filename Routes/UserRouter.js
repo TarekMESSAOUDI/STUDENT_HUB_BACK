@@ -2,7 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const User = require("../Models/UserModel");
 const multer = require("multer");
-
+var ObjectId = require('mongoose').Types.ObjectId;
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/User/');
@@ -108,13 +108,11 @@ userRouter.route('delete/:id')
 userRouter.route('/:id')
 //http://localhost:9091/User/id
 .put((req,res) => {
-    User.findById(req.params.id, (err, user) => {
-        user.save();
-        if(err){
-            res.sendStatus(400).json(err)
-        } else {
-            res.sendStatus(200).json(user)
-        }
+    if(!ObjectId.isValid(req.params.id))
+        return res.status(400).send(`No record with given id : ${req.params.id}`);
+    User.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true}, (err, doc) => {
+        if (!err) {res.send(doc);}
+        else {console.log('Error in User Update :' + JSON.stringify(err, undefined, 2));}
     });
 });
 
