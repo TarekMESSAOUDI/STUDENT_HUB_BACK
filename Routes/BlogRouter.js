@@ -2,6 +2,7 @@ const express = require("express");
 const blogRouter = express.Router();
 const Blog = require("../Models/BlogModel");
 const multer = require("multer");
+
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/Blog');
@@ -10,6 +11,7 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
+
 const fileFilter = (req, file, cb)=>{
     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png'){
     cb(null, true);
@@ -17,6 +19,7 @@ const fileFilter = (req, file, cb)=>{
     cb(new Error("le fichier doit etre jpeg, jpg ou png"), null, false);
     }
 };
+
 const image = multer({
     storage: storage, 
     limits:{
@@ -41,7 +44,7 @@ blogRouter.route("/")
 blogRouter.route("/")
 .post(image.single("image"),(req,res)=>{
     let blog = new Blog(req.body);
-    blog.image = req.file.path;
+    blog.image = req.file.originalname;
     blog.save();
     res.status(201).send(blog);
 });
