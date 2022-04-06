@@ -1,7 +1,8 @@
-const ROLE = {
-    ADMINISTRATEUR:"ADMINISTRATEUR",
-    UNIVERSITE:"UNIVERSITE",
-    ENSEIGNANT:"ENSEIGNANT",
-    ETUDIANT:"ETUDIANT",
-    CLUB:"CLUB",
-}
+const mongoose = require("mongoose");
+const Role = mongoose.model(
+  "Role",
+  new mongoose.Schema({
+    nom: String
+  })
+);
+module.exports = Role
