@@ -15,7 +15,6 @@ const roleRouter = require('./Routes/RoleRouter')
 const Role = require("./Models/RoleModel");
 const User = require("./Models/UserModel");
 var bcrypt = require("bcryptjs");
-
 mongoose.connect('mongodb://localhost:27017/StudentHub', {useNewUrlParser: true})
 .then(()=>{
   initialeRole();
@@ -28,13 +27,15 @@ app.use(bodyParser.json())
 app.use(express.static('Images'))
 
 app.get('/',(req,res)=>{res.send("Hello Student Hub");})
-app.use('/User', userRouter)
+app.use('/User', userRouter);
 app.use('/Blog', blogRouter)
 app.use('/Commentaire', commentaireRouter)
 app.use('/Emplois', emploisRouter)
 app.use('/Tache', tacheRouter)
 app.use('/Contact', contactRouter)
 app.use('/Role', roleRouter)
+
+
 
 app.listen(port, ()=>{ console.log(`http://localhost:${port}`)})
 
