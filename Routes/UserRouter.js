@@ -93,7 +93,7 @@ userRouter.route("/signup")
 
 userRouter.route("/signin")
 //http://localhost:9091/User/signin
-.get((req, res) => {
+.post((req, res) => {
   User.findOne({
     cin: req.body.cin
   })
@@ -119,19 +119,42 @@ userRouter.route("/signin")
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 864000 // 240 hours
       });
+
       var authorities = [];
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push(user.roles);
       }
+      user.authtoken = token;
       res.status(200).send({
-        id: user._id,
+        id: user.id,
         nom: user.nom,
         prenom: user.prenom,
+        titre: user.titre,
+        tel: user.tel,
         cin: user.cin,
         dateNaissance: user.dateNaissance,
         email: user.email,
+        ville: user.ville,
+        rue: user.rue,
+        codePostal: user.codePostal,
+        desactiver: user.desactiver,
+        disponibilite : user.disponibilite,
+        rang : user.rang,
+        profileImage : user.profileImage,
+        coverImage: user.coverImage,
+        institutImage : user.institutImage,
+        institut : user.institut,
+        specialite : user.specialite,
+        bio : user.bio,
+        skills1 : user.skills1,
+        skills2 : user.skills2,
+        skills3 : user.skills3,
+        skills4 : user.skills4,
+        softSkills : user.softSkills,
+        paye : user.paye,
+        sex : user.sex,
         roles: authorities,
-        accessToken: token
+        accessToken: token,
       });
     });
 });
@@ -198,7 +221,7 @@ userRouter.route('/update/:id')
         } else {
             console.log('Error in User Update :' + JSON.stringify(err, undefined, 2));
         }
-    });
+    }).populate("roles", "-__v");
 });
   
 userRouter.route("/getAllUniversities")
@@ -210,7 +233,7 @@ userRouter.route("/getAllUniversities")
         } else { 
             res.json(universities) 
         }
-    });
+    }).populate("roles", "-__v");
 });
   
 userRouter.route("/getAllEtudiant")
@@ -222,19 +245,8 @@ userRouter.route("/getAllEtudiant")
         } else { 
             res.json(etudiants) 
         }
-    });
+    }).populate("roles", "-__v");
 });
-
-/*userRouter.route("/Etudiant/add")
-//http://localhost:9091/User/Etudiant/add
-.post(image.single("profileImage"),(req, res) => {
-    req.body.role = "ETUDIANT"
-    let user = new User(req.body);
-    user.profileImage = req.file.originalname;
-    user.save()
-    res.status(201).send("Etudiant Ajouté avec Succès :)")
-});
-*/
 
 userRouter.route("/Image/profile/:id")
 //http://localhost:9091/User/Image/profile/id
@@ -248,7 +260,7 @@ userRouter.route("/Image/profile/:id")
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 userRouter.route("/Image/cover/:id")
@@ -263,7 +275,7 @@ userRouter.route("/Image/cover/:id")
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 userRouter.route("/Image/institut/:id")
@@ -278,7 +290,7 @@ userRouter.route("/Image/institut/:id")
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 //Enseigant    
