@@ -16,7 +16,7 @@ let userModel=new Schema({
     mdp:{type:String, default:new Date()},
     confirmMdp:{type:String},
     desactiver:{type:Boolean,default:0},
-    resettoken:{type:String},
+    accessToken:[{type:String, default:""}],
     disponibilite:{type:String},
     rang:{type:Number},
     profileImage:{type:String},
