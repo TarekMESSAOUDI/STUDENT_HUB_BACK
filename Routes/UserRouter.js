@@ -136,6 +136,48 @@ userRouter.route("/signin")
     });
 });
 
+userRouter.route("/updateMDP/:id")
+//http://localhost:9091/User/updateMDP
+
+
+.put((req, res) => {
+    User.findById(req.params.id, (err, user) => {
+//    if (err){
+//        res.sendStatus(400);
+//    }
+        // res.sendStatus(200).json(user)
+
+        
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.mdp,
+        user.mdp
+      );
+      var confirmmdpIsValid = bcrypt.compareSync(
+        req.body.confirmmdp,
+        req.body.nouveauxmdp,   
+           );
+      if (!passwordIsValid && !confirmmdpIsValid) {
+        //  res.status(401).send({
+         
+          message: "Mot de passe incorrect"
+        // });
+      }
+       else {
+           user.mdp= bcrypt.hashSync(req.body.confirmmdp, 8);
+           user.save();
+        //    res.sendStatus(200).json(user);
+       }
+    
+     
+    
+    });
+});
+
+
+
+
+
+
 userRouter.route("/getAll")
 //http://localhost:9091/User/getAll
 .get((req, res) => {
@@ -306,4 +348,5 @@ userRouter.route("/getAllClub")
         }
     });
 });
+   
 module.exports = userRouter
