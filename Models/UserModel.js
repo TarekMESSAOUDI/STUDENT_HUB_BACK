@@ -1,7 +1,6 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 const SEX = require("./SexModel")
-const ROLE = require("./RoleModel")
 
 let userModel=new Schema({
     nom:{type:String,required:true},
@@ -17,7 +16,7 @@ let userModel=new Schema({
     mdp:{type:String, default:new Date()},
     confirmMdp:{type:String},
     desactiver:{type:Boolean,default:0},
-    resettoken:{type:String},
+    accessToken:[{type:String, default:""}],
     disponibilite:{type:String},
     rang:{type:Number},
     profileImage:{type:String},
@@ -36,10 +35,12 @@ let userModel=new Schema({
             type: SEX,
             ref: "Sex"
         },
-    role:{
-            type: ROLE,
+    roles:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Role"
-        },
+        }
+    ]
 });
 
 module.exports = mongoose.model("Users", userModel)

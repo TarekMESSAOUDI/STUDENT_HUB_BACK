@@ -1,8 +1,13 @@
 const express = require("express");
 const userRouter = express.Router();
 const User = require("../Models/UserModel");
+const Role = require("../Models/RoleModel");
 const multer = require("multer");
 var ObjectId = require('mongoose').Types.ObjectId;
+const config = require("../config/auth.config");
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './Images/User/');
@@ -28,30 +33,173 @@ const image = multer({
     fileFilter: fileFilter
 });
 
-userRouter.post("/SignUp",(request,response)=>{
-    const signedUpuser= new User({
-        nom:request.body.nom,
-        prenom:request.body.prenom, 
-        titre:request.body.titre,
-        email:request.body.email,
-        tel:request.body.tel,
-        cin:request.body.cin,
-        adrresse:request.body.adresse,
-        mdp:request.body.mdp,
-        confirmMdp:request.body.confirmMdp,
-        desactiver:request.body.desactiver,
-        resettoken:request.body.resettoken,
-        disponibilite:request.body.disponibilite,
-        rang:request.body.rang,
-        sex:request.body.sex,   
-    })
-    signedUpuser.save().then(data =>{
-        response.json(data)
-    })
-    .then(error =>{
-        response.json(error)
-    })
-})
+userRouter.route("/signup")
+//http://localhost:9091/User/signup
+.post ((req, res) => {
+  const user = new User({
+    nom: req.body.nom,
+    prenom: req.body.prenom,
+    cin: req.body.cin,
+    email: req.body.email,
+    dateNaissance: req.body.dateNaissance,
+    mdp: bcrypt.hashSync(req.body.mdp, 8),
+  });
+    User.findOne({ cin: req.body.cin }).exec((err, u) => {
+        if (u) {
+            res.status(400).send({ message: "Echec! CIN exist déja!" });
+            return;
+        } else {
+            user.save((err, u) => {
+                if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+                if (req.body.roles) {
+                    Role.find({nom: { $in: req.body.roles }},
+                        (err, roles) => {
+                            if (err) {
+                                res.status(500).send({ message: err });
+                                return;
+                            }
+                            user.roles = roles.map(role => role._id);
+                            user.save(err => {
+                                if (err) {
+                                    res.status(500).send({ message: err });
+                                    return;
+                                }
+                                res.send({ message: "Utilisateur Enregistré Avec Succes!" });
+                            });
+                        });
+                    } else {
+                        Role.findOne({ nom: "ETUDIANT" }, (err, role) => {
+                            if (err) {
+                                res.status(500).send({ message: err });
+                                return;
+                            }
+                            user.roles = [role._id];
+                            user.save(err => {
+                                if (err) {
+                                    res.status(500).send({ message: err });
+                                    return;
+                                }
+                                res.send({ message: "Utilisateur Enregistré Avec Succes!" });
+                            });
+                        });
+                    }
+            });
+        };
+    });
+});
+
+userRouter.route("/signin")
+//http://localhost:9091/User/signin
+.post((req, res) => {
+  User.findOne({
+    cin: req.body.cin
+  })
+    .populate("roles", "-__v")
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
+      if (!user || user.desactiver === true) {
+        return res.status(404).send({ message: "User N'exist pas." });
+      }
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.mdp,
+        user.mdp
+      );
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!"
+        });
+      }
+      var token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 864000 // 240 hours
+      });
+
+      var authorities = [];
+      for (let i = 0; i < user.roles.length; i++) {
+        authorities.push(user.roles);
+      }
+      user.authtoken = token;
+      res.status(200).send({
+        id: user.id,
+        nom: user.nom,
+        prenom: user.prenom,
+        titre: user.titre,
+        tel: user.tel,
+        cin: user.cin,
+        dateNaissance: user.dateNaissance,
+        email: user.email,
+        ville: user.ville,
+        rue: user.rue,
+        codePostal: user.codePostal,
+        desactiver: user.desactiver,
+        disponibilite : user.disponibilite,
+        rang : user.rang,
+        profileImage : user.profileImage,
+        coverImage: user.coverImage,
+        institutImage : user.institutImage,
+        institut : user.institut,
+        specialite : user.specialite,
+        bio : user.bio,
+        skills1 : user.skills1,
+        skills2 : user.skills2,
+        skills3 : user.skills3,
+        skills4 : user.skills4,
+        softSkills : user.softSkills,
+        paye : user.paye,
+        sex : user.sex,
+        roles: authorities,
+        accessToken: token,
+      });
+    });
+});
+
+userRouter.route("/updateMDP/:id")
+//http://localhost:9091/User/updateMDP
+
+
+.put((req, res) => {
+    User.findById(req.params.id, (err, user) => {
+//    if (err){
+//        res.sendStatus(400);
+//    }
+        // res.sendStatus(200).json(user)
+
+        
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.mdp,
+        user.mdp
+      );
+      var confirmmdpIsValid = bcrypt.compareSync(
+        req.body.confirmmdp,
+        req.body.nouveauxmdp,   
+           );
+      if (!passwordIsValid && !confirmmdpIsValid) {
+        //  res.status(401).send({
+         
+          message: "Mot de passe incorrect"
+        // });
+      }
+       else {
+           user.mdp= bcrypt.hashSync(req.body.confirmmdp, 8);
+           user.save();
+        //    res.sendStatus(200).json(user);
+       }
+    
+     
+    
+    });
+});
+
+
+
+
+
 
 userRouter.route("/getAll")
 //http://localhost:9091/User/getAll
@@ -62,7 +210,7 @@ userRouter.route("/getAll")
         } else { 
             res.json(users); 
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 userRouter.route("/Count")
@@ -86,7 +234,7 @@ userRouter.route('/getById/:id')
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 userRouter.route('delete/:id')
@@ -104,21 +252,22 @@ userRouter.route('delete/:id')
     });
 });
 
-
-userRouter.route('/:id')
-//http://localhost:9091/User/id
+userRouter.route('/update/:id')
+//http://localhost:9091/User/update/id
 .put((req,res) => {
     if(!ObjectId.isValid(req.params.id))
-        return res.status(400).send(`No record with given id : ${req.params.id}`);
+        return res.status(400).send(`Pas d'enregistrement avec ce ID : ${req.params.id}`);
     User.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true}, (err, doc) => {
-        if (!err) {res.send(doc);}
-        else {console.log('Error in User Update :' + JSON.stringify(err, undefined, 2));}
-    });
+        if (!err) {
+            res.send(doc);
+        } else {
+            console.log('Error in User Update :' + JSON.stringify(err, undefined, 2));
+        }
+    }).populate("roles", "-__v");
 });
-
-//Universite    
-userRouter.route("/Universite/getAll")
-//http://localhost:9091/User/Universite/getAll
+  
+userRouter.route("/getAllUniversities")
+//http://localhost:9091/User/getAllUniversities
 .get((req, res) => {
     User.find({role: "UNIVERSITE"}, (err, universities) => {
         if (err) { 
@@ -126,22 +275,11 @@ userRouter.route("/Universite/getAll")
         } else { 
             res.json(universities) 
         }
-    });
+    }).populate("roles", "-__v");
 });
-
-userRouter.route("/Universite/add")
-//http://localhost:9091/User/Universite/add
-.post(image.single("image"),(req, res) => {
-    req.body.role = "UNIVERSITE"
-    let user = new User(req.body)
-    user.profileImage = req.file.originalname
-    user.save()
-    res.status(201).json("Université Ajouté avec Succes :)")
-});
-
-//Etudiant    
-userRouter.route("/Etudiant/getAll")
-//http://localhost:9091/User/Etudiant/getAll
+  
+userRouter.route("/getAllEtudiant")
+//http://localhost:9091/User/getAllEtudiant
 .get((req, res) => {
     User.find({role: "ETUDIANT"}, (err, etudiants) => {
         if (err) { 
@@ -149,17 +287,22 @@ userRouter.route("/Etudiant/getAll")
         } else { 
             res.json(etudiants) 
         }
-    });
+    }).populate("roles", "-__v");
 });
 
-userRouter.route("/Etudiant/add")
-//http://localhost:9091/User/Etudiant/add
-.post(image.single("profileImage"),(req, res) => {
-    req.body.role = "ETUDIANT"
-    let user = new User(req.body);
-    user.profileImage = req.file.originalname;
-    user.save()
-    res.status(201).send("Etudiant Ajouté avec Succès :)")
+userRouter.route("/Image/profile/:id")
+//http://localhost:9091/User/Image/profile/id
+.put(image.single("profileImage"),(req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        user.profileImage = req.file.originalname;
+        user.save();
+        if(err){
+            res.sendStatus(400).json(err);
+            console.log(err);
+        } else {
+            res.json(user);
+        }
+    }).populate("roles", "-__v");
 });
 
 userRouter.route("/Image/cover/:id")
@@ -174,9 +317,8 @@ userRouter.route("/Image/cover/:id")
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
-
 
 userRouter.route("/Image/institut/:id")
 //http://localhost:9091/User/Image/institut/id
@@ -190,11 +332,11 @@ userRouter.route("/Image/institut/:id")
         } else {
             res.json(user);
         }
-    });
+    }).populate("roles", "-__v");
 });
 
 //Enseigant    
-userRouter.route("/Enseignant/getAll")
+userRouter.route("/getAllEnseignant")
 //http://localhost:9091/User/Enseigant/getAll
 .get((req, res) => {
     User.find({role: "ENSEIGNANT"}, (err, enseignants) => {
@@ -206,17 +348,8 @@ userRouter.route("/Enseignant/getAll")
     });
 });
 
-userRouter.route("/Enseignant/add")
-//http://localhost:9091/User/Enseignant/add
-.post((req, res) => {
-    req.body.role = "ENSEIGNANT"
-    let user = new User(req.body)
-    user.save()
-    res.status(201).send("Enseignant Ajouté avec Succes :)")
-});
-
 //Club    
-userRouter.route("/Club/getAll")
+userRouter.route("/getAllClub")
 //http://localhost:9091/User/Club/getAll
 .get((req, res) => {
     User.find({role: "CLUB"}, (err, club) => {
@@ -227,14 +360,5 @@ userRouter.route("/Club/getAll")
         }
     });
 });
-
-userRouter.route("/Club/add")
-//http://localhost:9091/User/Club/add
-.post((req, res) => {
-    req.body.role = "CLUB"
-    let user = new User(req.body)
-    user.save()
-    res.status(201).send("Club Ajouté avec Succes :)")
-});
-
+   
 module.exports = userRouter
