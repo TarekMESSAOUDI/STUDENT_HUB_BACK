@@ -194,12 +194,29 @@ userRouter
         req.body.confirmmdp,
         req.body.nouveauxmdp
       );
-      if (!passwordIsValid && !confirmmdpIsValid) {
+      if (!user || !passwordIsValid || !confirmmdpIsValid) {
         message: "Mot de passe incorrect";
       } else {
         user.mdp = bcrypt.hashSync(req.body.confirmmdp, 8);
+        user.confirmMDP = bcrypt.hashSync(req.body.confirmmdp, 8);
+        user.save().sendStatus(200);
+      }
+    });
+  });
+
+userRouter
+  .route("/updateMDPa")
+  //http://localhost:9091/User/updateMDP
+
+  .put((req, res) => {
+    User.findOne({ cin: req.body.cin }, (err, user) => {
+      if (req.body.nMdp != req.body.cNMdp || !user) {
+        return res.sendStatus(400);
+      } else {
+        nMdp = req.body.nMdp;
+        user.mdp = bcrypt.hashSync(nMdp, 8);
         user.save();
-        //    res.sendStatus(200).json(user);
+        res.sendStatus(200);
       }
     });
   });
