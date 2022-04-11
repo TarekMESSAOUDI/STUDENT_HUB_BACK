@@ -261,7 +261,7 @@ userRouter
   });
 
 userRouter
-  .route("delete/:id")
+  .route("/delete/:id")
   //http://localhost:9091/User/delete/id
   .delete((req, res) => {
     User.findById(req.params.id, (err, user) => {
@@ -338,7 +338,7 @@ userRouter
       } else {
         res.json(user);
       }
-    }).populate("roles", "-__v");
+    });
   });
 
 userRouter
