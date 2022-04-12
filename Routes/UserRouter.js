@@ -261,7 +261,7 @@ userRouter
   });
 
 userRouter
-  .route("delete/:id")
+  .route("/delete/:id")
   //http://localhost:9091/User/delete/id
   .delete((req, res) => {
     User.findById(req.params.id, (err, user) => {
@@ -303,7 +303,7 @@ userRouter
   .route("/getAllUniversities")
   //http://localhost:9091/User/getAllUniversities
   .get((req, res) => {
-    User.find({ role: "UNIVERSITE" }, (err, universities) => {
+    User.find({ roles: "UNIVERSITE" }, (err, universities) => {
       if (err) {
         res.status(400).json(err);
       } else {
@@ -325,7 +325,7 @@ userRouter
     }).populate("roles", "-__v");
   });
 
-userRouter
+userRouter  
   .route("/Image/profile/:id")
   //http://localhost:9091/User/Image/profile/id
   .put(image.single("profileImage"), (req, res) => {
