@@ -302,8 +302,14 @@ userRouter
 userRouter
   .route("/getAllUniversities")
   //http://localhost:9091/User/getAllUniversities
+<<<<<<< HEAD
   .get((req, res) => {
     User.find({ roles: "UNIVERSITE" }, (err, universities) => {
+=======
+  .get(async (req, res) => {
+    let u = await Role.find({ nom: "UNIVERSITE" });
+    User.find({ roles: u }, (err, universities) => {
+>>>>>>> 938f9becc93a41ced36ef71a7e6fdcfb69fefb21
       if (err) {
         res.status(400).json(err);
       } else {
@@ -315,8 +321,9 @@ userRouter
 userRouter
   .route("/getAllEtudiant")
   //http://localhost:9091/User/getAllEtudiant
-  .get((req, res) => {
-    User.find({ role: "ETUDIANT" }, (err, etudiants) => {
+  .get(async (req, res) => {
+    let e = await Role.find({ nom: "ETUDIANT" });
+    User.find({ roles: e }, (err, etudiants) => {
       if (err) {
         res.status(400).json(err);
       } else {
@@ -338,7 +345,7 @@ userRouter
       } else {
         res.json(user);
       }
-    }).populate("roles", "-__v");
+    });
   });
 
 userRouter
@@ -377,8 +384,9 @@ userRouter
 userRouter
   .route("/getAllEnseignant")
   //http://localhost:9091/User/Enseigant/getAll
-  .get((req, res) => {
-    User.find({ role: "ENSEIGNANT" }, (err, enseignants) => {
+  .get(async (req, res) => {
+    let en = await Role.find({ nom: "ENSEIGNANT" });
+    User.find({ roles: en }, (err, enseignants) => {
       if (err) {
         res.status(400).json(err);
       } else {
