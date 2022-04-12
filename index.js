@@ -17,9 +17,9 @@ const User = require("./Models/UserModel");
 var bcrypt = require("bcryptjs");
 mongoose
   .connect("mongodb://localhost:27017/StudentHub", { useNewUrlParser: true })
-  .then(() => {
-    initialeRole();
-    initialeUser();
+  .then(async () => {
+    let rl = await initialeRole();
+    initialeUser(rl);
   });
 app.use(cors());
 app.use(logger("dev"));
@@ -42,10 +42,10 @@ app.listen(port, () => {
   console.log(`http://localhost:${port}`);
 });
 
-function initialeRole() {
-  Role.estimatedDocumentCount((err, count) => {
+async function initialeRole() {
+  Role.estimatedDocumentCount(async (err, count) => {
     if (!err && count === 0) {
-      new Role({
+      await new Role({
         nom: "ADMINISTRATEUR",
       }).save((err) => {
         if (err) {
@@ -53,7 +53,7 @@ function initialeRole() {
         }
         console.log("Role ADMINISTRATEUR Ajouté");
       });
-      new Role({
+      await new Role({
         nom: "UNIVERSITE",
       }).save((err) => {
         if (err) {
@@ -61,7 +61,7 @@ function initialeRole() {
         }
         console.log("Role UNIVERSITE Ajouté");
       });
-      new Role({
+      await new Role({
         nom: "ENSEIGNANT",
       }).save((err) => {
         if (err) {
@@ -69,7 +69,7 @@ function initialeRole() {
         }
         console.log("Role ENSEIGNANT Ajouté");
       });
-      new Role({
+      await new Role({
         nom: "ETUDIANT",
       }).save((err) => {
         if (err) {
@@ -77,7 +77,7 @@ function initialeRole() {
         }
         console.log("Role ETUDIANT Ajouté");
       });
-      new Role({
+      await new Role({
         nom: "CLUB",
       }).save((err) => {
         if (err) {
@@ -87,9 +87,10 @@ function initialeRole() {
       });
     }
   });
+  return await Role.findOne({ nom: "ADMINISTRATEUR" });
 }
 
-function initialeUser() {
+function initialeUser(role) {
   User.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new User({
@@ -109,9 +110,6 @@ function initialeUser() {
         resettoken: "Admin",
         disponibilite: "Admin",
         rang: 0,
-        profileImage: "Admin",
-        coverImage: "Admin",
-        institutImage: "Admin",
         institut: "Admin",
         specialite: "Admin",
         bio: "Admin",
@@ -122,7 +120,7 @@ function initialeUser() {
         softSkills: "Admin",
         paye: "Admin",
         sex: "Admin",
-        roles: "625030dd9f3bad7d78d0d481",
+        roles: role._id,
       }).save((err) => {
         if (err) {
           console.log(err);
