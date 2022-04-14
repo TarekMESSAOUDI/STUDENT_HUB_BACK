@@ -41,6 +41,12 @@ let userModel = new Schema({
       ref: "Role",
     },
   ],
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Users", userModel);
