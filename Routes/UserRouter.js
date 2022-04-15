@@ -312,6 +312,10 @@ userRouter
         for (let i = 0; i < user.roles.length; i++) {
           authorities.push(user.roles);
         }
+        var blogs = [];
+        for (let i = 0; i < user.blogs.length; i++) {
+          blogs.push(user.blogs);
+        }
         user.authtoken = token;
         res.status(200).send({
           id: user.id,
@@ -342,6 +346,7 @@ userRouter
           paye: user.paye,
           sex: user.sex,
           roles: authorities,
+          blogs: blogs,
           accessToken: token,
         });
       });
@@ -393,7 +398,9 @@ userRouter
       } else {
         res.json(users);
       }
-    }).populate("roles", "-__v");
+    })
+      .populate("roles", "-__v")
+      .populate("blogs", "-__v");
   });
 
 userRouter

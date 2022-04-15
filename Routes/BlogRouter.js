@@ -52,7 +52,7 @@ blogRouter.route("/:id").post(image.single("image"), (req, res) => {
   blog.image = req.file.originalname;
   const idBlog = blog._id;
   User.findById(req.params.id, (err, user) => {
-    user.blogs.push(idBlog);
+    user.blogs.push(blog);
     console.log(user);
     user.save();
     blog.user = user._id;
