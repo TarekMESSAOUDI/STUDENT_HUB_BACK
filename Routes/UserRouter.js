@@ -366,7 +366,7 @@ userRouter
         await (user.mdp = bcrypt.hashSync(req.body.cNMdp, 8));
         await (user.confirmMDP = bcrypt.hashSync(req.body.cNMdp, 8));
         await user.save();
-        res.sendStatus(200).json;
+        res.sendStatus(200);
       }
     });
   });
@@ -404,15 +404,46 @@ userRouter
   });
 
 userRouter
-  .route("/Count")
+  .route("/CountUniversite")
   //http://localhost:9091/User/Count
-  .get((req, res) => {
-    User.count({}, (err, n) => {
-      if (err) {
-        res.send(400).json(err);
-      } else {
-        res.json(n);
-      }
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "UNIVERSITE"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountEnseignant")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "ENSEIGNANT"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountEtudiant")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "ETUDIANT"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountClub")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "CLUB"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
     });
   });
 
