@@ -10,7 +10,7 @@ var bcrypt = require("bcryptjs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./Images/");
+    cb(null, "./Images/User/");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -38,7 +38,7 @@ const image = multer({
 });
 
 userRouter
-  .route("/signup")
+  .route("/signupEtudiant")
   //http://localhost:9091/User/signup
   .post((req, res) => {
     const user = new User({
@@ -118,6 +118,170 @@ userRouter
   });
 
 userRouter
+  .route("/signupEnseignat")
+  //http://localhost:9091/User/signup
+  .post((req, res) => {
+    const user = new User({
+      nom: req.body.nom,
+      prenom: req.body.prenom,
+      titre: req.body.titre,
+      tel: req.body.tel,
+      cin: req.body.cin,
+      email: req.body.email,
+      dateNaissance: req.body.dateNaissance,
+      mdp: bcrypt.hashSync(req.body.mdp, 8),
+      confirmMDP: bcrypt.hashSync(req.body.confirmMDP),
+      ville: req.body.ville,
+      rue: req.body.rue,
+      codePostal: req.body.codePostal,
+      desactiver: req.body.desactiver,
+      disponibilite: req.body.disponibilite,
+      rang: req.body.rang,
+      profileImage: req.body.profileImage,
+      coverImage: req.body.coverImage,
+      institutImage: req.body.institutImage,
+      institut: req.body.institut,
+      specialite: req.body.specialite,
+      bio: req.body.bio,
+      skills1: req.body.skills1,
+      skills2: req.body.skills2,
+      skills3: req.body.skills3,
+      skills4: req.body.skills4,
+      softSkills: req.body.softSkills,
+      paye: req.body.paye,
+      sex: req.body.sex,
+    });
+    User.findOne({ cin: req.body.cin }).exec((err, u) => {
+      if (u) {
+        res.status(400).send({ message: "Echec! CIN exist déja!" });
+        return;
+      } else {
+        user.save((err, u) => {
+          if (err) {
+            res.status(500).send({ message: err });
+            return;
+          }
+          if (req.body.roles) {
+            Role.find({ nom: { $in: req.body.roles } }, (err, roles) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+              user.roles = roles.map((role) => role._id);
+              user.save((err) => {
+                if (err) {
+                  res.status(500).send({ message: err });
+                  return;
+                }
+                res.send({ message: "Utilisateur Enregistré Avec Succes!" });
+              });
+            });
+          } else {
+            Role.findOne({ nom: "ENSEIGNANT" }, (err, role) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+              user.roles = [role._id];
+              user.save((err) => {
+                if (err) {
+                  res.status(500).send({ message: err });
+                  return;
+                }
+                res.send({ message: "Utilisateur Enregistré Avec Succes!" });
+              });
+            });
+          }
+        });
+      }
+    });
+  });
+
+userRouter
+  .route("/signupUniversite")
+  //http://localhost:9091/User/signup
+  .post((req, res) => {
+    const user = new User({
+      nom: req.body.nom,
+      prenom: req.body.prenom,
+      titre: req.body.titre,
+      tel: req.body.tel,
+      cin: req.body.cin,
+      email: req.body.email,
+      dateNaissance: req.body.dateNaissance,
+      mdp: bcrypt.hashSync(req.body.mdp, 8),
+      confirmMDP: bcrypt.hashSync(req.body.confirmMDP),
+      ville: req.body.ville,
+      rue: req.body.rue,
+      codePostal: req.body.codePostal,
+      desactiver: req.body.desactiver,
+      disponibilite: req.body.disponibilite,
+      rang: req.body.rang,
+      profileImage: req.body.profileImage,
+      coverImage: req.body.coverImage,
+      institutImage: req.body.institutImage,
+      institut: req.body.institut,
+      specialite: req.body.specialite,
+      bio: req.body.bio,
+      skills1: req.body.skills1,
+      skills2: req.body.skills2,
+      skills3: req.body.skills3,
+      skills4: req.body.skills4,
+      softSkills: req.body.softSkills,
+      paye: req.body.paye,
+      sex: req.body.sex,
+    });
+    User.findOne({ cin: req.body.cin }).exec((err, u) => {
+      if (u) {
+        res.status(400).send({ message: "Echec! CIN exist déja!" });
+        return;
+      } else {
+        user.save((err, u) => {
+          if (err) {
+            res.status(500).send({ message: err });
+            return;
+          }
+          if (req.body.roles) {
+            Role.find({ nom: { $in: req.body.roles } }, (err, roles) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+              user.roles = roles.map((role) => role._id);
+              user.save((err) => {
+                if (err) {
+                  res.status(500).send({ message: err });
+                  return;
+                }
+                res.send({
+                  message: "Utilisateur Enregistré Avec Succes!",
+                });
+              });
+            });
+          } else {
+            Role.findOne({ nom: "UNIVERSITE" }, (err, role) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+              user.roles = [role._id];
+              user.save((err) => {
+                if (err) {
+                  res.status(500).send({ message: err });
+                  return;
+                }
+                res.send({
+                  message: "Utilisateur Enregistré Avec Succes!",
+                });
+              });
+            });
+          }
+        });
+      }
+    });
+  });
+
+userRouter
   .route("/signin")
   //http://localhost:9091/User/signin
   .post((req, res) => {
@@ -147,6 +311,10 @@ userRouter
         var authorities = [];
         for (let i = 0; i < user.roles.length; i++) {
           authorities.push(user.roles);
+        }
+        var blogs = [];
+        for (let i = 0; i < user.blogs.length; i++) {
+          blogs.push(user.blogs);
         }
         user.authtoken = token;
         res.status(200).send({
@@ -178,6 +346,7 @@ userRouter
           paye: user.paye,
           sex: user.sex,
           roles: authorities,
+          blogs: blogs,
           accessToken: token,
         });
       });
@@ -186,20 +355,18 @@ userRouter
 userRouter
   .route("/updateMDP/:id")
   //http://localhost:9091/User/updateMDP
-
   .put((req, res) => {
-    User.findById(req.params.id, (err, user) => {
-      var passwordIsValid = bcrypt.compareSync(req.body.mdp, user.mdp);
-      var confirmmdpIsValid = bcrypt.compareSync(
-        req.body.confirmmdp,
-        req.body.nouveauxmdp
-      );
+    User.findById(req.params.id, async (err, user) => {
+      var passwordIsValid = bcrypt.compareSync(req.body.aMdp, user.mdp);
+      var cNMdp = bcrypt.hashSync(req.body.cNMdp, 8);
+      var confirmmdpIsValid = bcrypt.compareSync(req.body.nMdp, cNMdp);
       if (!user || !passwordIsValid || !confirmmdpIsValid) {
-        message: "Mot de passe incorrect";
+        return res.sendStatus(400);
       } else {
-        user.mdp = bcrypt.hashSync(req.body.confirmmdp, 8);
-        user.confirmMDP = bcrypt.hashSync(req.body.confirmmdp, 8);
-        user.save().sendStatus(200);
+        await (user.mdp = bcrypt.hashSync(req.body.cNMdp, 8));
+        await (user.confirmMDP = bcrypt.hashSync(req.body.cNMdp, 8));
+        await user.save();
+        res.sendStatus(200);
       }
     });
   });
@@ -231,19 +398,52 @@ userRouter
       } else {
         res.json(users);
       }
-    }).populate("roles", "-__v");
+    })
+      .populate("roles", "-__v")
+      .populate("blogs", "-__v");
   });
 
 userRouter
-  .route("/Count")
+  .route("/CountUniversite")
   //http://localhost:9091/User/Count
-  .get((req, res) => {
-    User.count({}, (err, n) => {
-      if (err) {
-        res.send(400).json(err);
-      } else {
-        res.json(n);
-      }
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "UNIVERSITE"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountEnseignant")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "ENSEIGNANT"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountEtudiant")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "ETUDIANT"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
+    });
+  });
+
+  userRouter
+  .route("/CountClub")
+  //http://localhost:9091/User/Count
+  .get(async(req, res) => {
+    let ro = await Role.findOne({nom : "CLUB"})
+    User.count({roles: ro._id},(err, number) => {
+      res.json(number);
+      return number;
     });
   });
 
@@ -335,8 +535,7 @@ userRouter
       user.profileImage = req.file.originalname;
       user.save();
       if (err) {
-        res.sendStatus(400).json(err);
-        console.log(err);
+        res.sendStatus(400);
       } else {
         res.json(user);
       }

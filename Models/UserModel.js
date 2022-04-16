@@ -19,9 +19,9 @@ let userModel = new Schema({
   accessToken: [{ type: String, default: "" }],
   disponibilite: { type: String },
   rang: { type: Number },
-  profileImage: { type: String, default: "ProfilePikoro.jpeg" },
-  coverImage: { type: String, default: "coverPikoro.jpeg" },
-  institutImage: { type: String, default: "profilePikoro.jpeg" },
+  profileImage: { type: String, default: "PROFILE.jpeg" },
+  coverImage: { type: String, default: "COVER.jpeg" },
+  institutImage: { type: String, default: "ESEN.jpeg" },
   institut: { type: String },
   specialite: { type: String },
   bio: { type: String },
@@ -39,6 +39,12 @@ let userModel = new Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
+    },
+  ],
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
     },
   ],
 });
