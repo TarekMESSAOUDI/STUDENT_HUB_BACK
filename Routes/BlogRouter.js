@@ -47,12 +47,13 @@ blogRouter
   });
 
 //http://localhost:9091/blog
-blogRouter.route("/:id").post(image.single("image"), (req, res) => {
+blogRouter.route("/:id")
+.post(image.single("image"), (req, res) => {
   let blog = new Blog(req.body);
   blog.image = req.file.originalname;
   const idBlog = blog._id;
   User.findById(req.params.id, (err, user) => {
-    user.blogs.push(idBlog);
+    user.blogs.push(blog);
     console.log(user);
     user.save();
     blog.user = user._id;
