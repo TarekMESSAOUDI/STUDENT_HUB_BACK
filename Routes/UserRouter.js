@@ -302,14 +302,9 @@ userRouter
 userRouter
   .route("/getAllUniversities")
   //http://localhost:9091/User/getAllUniversities
-<<<<<<< HEAD
-  .get((req, res) => {
-    User.find({ roles: "UNIVERSITE" }, (err, universities) => {
-=======
   .get(async (req, res) => {
     let u = await Role.find({ nom: "UNIVERSITE" });
     User.find({ roles: u }, (err, universities) => {
->>>>>>> 938f9becc93a41ced36ef71a7e6fdcfb69fefb21
       if (err) {
         res.status(400).json(err);
       } else {
@@ -399,12 +394,13 @@ userRouter
 userRouter
   .route("/getAllClub")
   //http://localhost:9091/User/Club/getAll
-  .get((req, res) => {
-    User.find({ role: "CLUB" }, (err, club) => {
+  .get(async (req, res) => {
+    let en = await Role.find({ nom: "CLUB" });
+    User.find({ roles: en }, (err, Club ) => {
       if (err) {
         res.status(400).json(err);
       } else {
-        res.json(club);
+        res.json(Club );
       }
     });
   });
