@@ -47,7 +47,8 @@ blogRouter
   });
 
 //http://localhost:9091/blog
-blogRouter.route("/:id").post(image.single("image"), (req, res) => {
+blogRouter.route("/:id")
+.post(image.single("image"), (req, res) => {
   let blog = new Blog(req.body);
   blog.image = req.file.originalname;
   const idBlog = blog._id;
