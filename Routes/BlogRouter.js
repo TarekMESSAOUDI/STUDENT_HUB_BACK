@@ -33,17 +33,20 @@ const image = multer({
   fileFilter: fileFilter,
 });
 
-blogRouter
-  .route("/")
-  //http://localhost:9091/blog
+
+  blogRouter
+  .route("/getAll")
+  //http://localhost:9091/User/getAll
   .get((req, res) => {
-    Blog.find({}, (err, users) => {
+    Blog.find({}, (err, blogs) => {
       if (err) {
-        res.status(400).json(err);
+        res.status(401).json(err);
       } else {
-        res.status(200).json(users);
+        res.status(200).json(blogs);
       }
-    });
+    })
+      
+      .populate("commentaire", "-__v").populate("user", "-__v");
   });
 
 //http://localhost:9091/blog

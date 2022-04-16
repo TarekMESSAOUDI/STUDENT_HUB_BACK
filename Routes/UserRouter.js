@@ -394,7 +394,7 @@ userRouter
   .get((req, res) => {
     User.find({}, (err, users) => {
       if (err) {
-        res.send(400).json(err);
+        res.sendStatus(400).json(err);
       } else {
         res.json(users);
       }

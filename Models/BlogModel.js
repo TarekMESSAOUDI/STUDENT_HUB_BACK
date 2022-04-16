@@ -6,13 +6,15 @@ const blogModel = new Schema({
   description: { type: String, required: true },
   date: { type: Date, default: new Date() },
   image: { type: String },
-  user: {
-    type: mongoose.Types.ObjectId,
+  user: 
+    {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-  },
+  }
+,
   commentaire: [
     {
-      type: mongoose.Schema.Types.Array,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Commentaire",
     },
   ],
