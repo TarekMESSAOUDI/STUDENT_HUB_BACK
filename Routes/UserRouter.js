@@ -44,10 +44,15 @@ userRouter
     const user = new User({
       nom: req.body.nom,
       prenom: req.body.prenom,
-      titre: req.body.titre,
-      tel: req.body.tel,
       cin: req.body.cin,
       email: req.body.email,
+      mdp: bcrypt.hashSync(req.body.mdp, 8),
+      confirmMDP: bcrypt.hashSync(req.body.confirmMDP),
+      class: req.body.class,
+
+      dateNaissance: req.body.dateNaissance,
+      titre: req.body.titre,
+      tel: req.body.tel,
       dateNaissance: req.body.dateNaissance,
       mdp: bcrypt.hashSync(req.body.mdp, 8),
       confirmMDP: bcrypt.hashSync(req.body.confirmMDP),
@@ -238,7 +243,7 @@ userRouter
       } else {
         user.save((err, u) => {
           if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).json(err);
             return;
           }
           if (req.body.roles) {
@@ -453,7 +458,7 @@ userRouter
   .get((req, res) => {
     User.findById(req.params.id, (err, user) => {
       if (err) {
-        res.sendStatus(400).json(err);
+        res.status(400).json(err);
       } else {
         res.json(user);
       }
@@ -513,6 +518,7 @@ userRouter
     }).populate("roles", "-__v");
   });
 
+
 userRouter
   .route("/getAllEtudiant")
   //http://localhost:9091/User/getAllEtudiant
@@ -525,6 +531,49 @@ userRouter
         res.json(etudiants);
       }
     }).populate("roles", "-__v");
+  });
+
+  userRouter
+  .route("/getEtudiantByClassId/:id")
+  //http://localhost:9091/User/getEtudiantByClassId/id
+  .get(async (req, res) => {
+    User.find({ class: req.params.id }, (err, etudiants) => {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(etudiants);
+      }
+    }).populate("roles", "-__v");
+  });
+
+  //Enseigant
+userRouter
+  .route("/getAllEnseignant")
+  //http://localhost:9091/User/Enseigant/getAll
+  .get(async (req, res) => {
+    let en = await Role.find({ nom: "ENSEIGNANT" });
+    User.find({ roles: en }, (err, enseignants) => {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(enseignants);
+      }
+    });
+  });
+
+//Club
+userRouter
+  .route("/getAllClub")
+  //http://localhost:9091/User/Club/getAll
+  .get(async (req, res) => {
+    let en = await Role.find({ nom: "CLUB" });
+    User.find({ roles: en }, (err, Club ) => {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        res.json(Club );
+      }
+    });
   });
 
 userRouter
@@ -574,33 +623,6 @@ userRouter
     }).populate("roles", "-__v");
   });
 
-//Enseigant
-userRouter
-  .route("/getAllEnseignant")
-  //http://localhost:9091/User/Enseigant/getAll
-  .get(async (req, res) => {
-    let en = await Role.find({ nom: "ENSEIGNANT" });
-    User.find({ roles: en }, (err, enseignants) => {
-      if (err) {
-        res.status(400).json(err);
-      } else {
-        res.json(enseignants);
-      }
-    });
-  });
 
-//Club
-userRouter
-  .route("/getAllClub")
-  //http://localhost:9091/User/Club/getAll
-  .get((req, res) => {
-    User.find({ role: "CLUB" }, (err, club) => {
-      if (err) {
-        res.status(400).json(err);
-      } else {
-        res.json(club);
-      }
-    });
-  });
 
 module.exports = userRouter;

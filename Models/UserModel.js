@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const SEX = require("./SexModel");
 
-let userModel = new Schema({
+const userModel = new Schema({
   nom: { type: String, required: true },
   prenom: { type: String },
   titre: { type: String },
@@ -23,7 +23,6 @@ let userModel = new Schema({
   coverImage: { type: String, default: "COVER.jpeg" },
   institutImage: { type: String, default: "ESEN.jpeg" },
   institut: { type: String },
-  specialite: { type: String },
   bio: { type: String },
   skills1: { type: String },
   skills2: { type: String },
@@ -35,18 +34,30 @@ let userModel = new Schema({
     type: SEX,
     ref: "Sex",
   },
+  class: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Class",
+  },
+  filiere:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Filiere",
+  },
+  /*specialite:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Specialite",
+    default: "Tron_Commun"
+  },
+  niveau:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Niveau",
+    default: "No_Level"
+  },*/
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
     },
   ],
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Blog",
-    },
-  ],
 });
 
-module.exports = mongoose.model("Users", userModel);
+module.exports = mongoose.model("User", userModel);

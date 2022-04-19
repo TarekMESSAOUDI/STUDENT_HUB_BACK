@@ -17,13 +17,13 @@ commentaireRouter
     });
   });
 
-commentaireRouter
+/*commentaireRouter
   .route("/:id")
   // add commentaire to blog
   //http://localhost:9091/commentaire/id
   .post((req, res) => {
     let commentaire = new Commentaire(req.body);
-    return Commentaire.create(commentaire).then((docCommentaire) => {
+     Commentaire.create(commentaire).then((docCommentaire) => {
       return Blog.findByIdAndUpdate(
         req.params.id,
         {
@@ -33,9 +33,12 @@ commentaireRouter
           new: true,
           useFindAndModify: false,
         }
+        
       );
+      
     });
-  });
+    return res.status(200).json(commentaire)
+  });*/
 
 commentaireRouter
   .route("/Reponse/:id")
