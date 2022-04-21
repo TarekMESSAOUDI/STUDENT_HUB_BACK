@@ -62,7 +62,7 @@ async function initialeRole() {
         if (err) {
           console.log(err);
         }
-        console.log("Role ADMINISTRATEUR Ajouté");
+        console.log("Added Role ADMINISTRATEUR");
       });
       await new Role({
         nom: "UNIVERSITE",
@@ -70,7 +70,7 @@ async function initialeRole() {
         if (err) {
           console.log(err);
         }
-        console.log("Role UNIVERSITE Ajouté");
+        console.log("Added Role UNIVERSITE");
       });
       await new Role({
         nom: "ENSEIGNANT",
@@ -78,7 +78,7 @@ async function initialeRole() {
         if (err) {
           console.log(err);
         }
-        console.log("Role ENSEIGNANT Ajouté");
+        console.log("Added Role ENSEIGNANT");
       });
       await new Role({
         nom: "ETUDIANT",
@@ -86,7 +86,7 @@ async function initialeRole() {
         if (err) {
           console.log(err);
         }
-        console.log("Role ETUDIANT Ajouté");
+        console.log("Added Role ETUDIANT");
       });
       await new Role({
         nom: "CLUB",
@@ -94,7 +94,7 @@ async function initialeRole() {
         if (err) {
           console.log(err);
         }
-        console.log("Role CLUB Ajouté");
+        console.log("Added Role CLUB");
       });
     }
   });
@@ -108,37 +108,23 @@ function initialeUser(role) {
         new User({
           nom: "Admin",
           prenom: "Admin",
-          titre: "Admin",
-          email: "Admin",
-          tel: "Admin",
-          cin: "Admin",
-          ville: "Admin",
-          rue: "Admin",
-          codePostale: "Admin",
-          dateNaissance: new Date(),
+          titre: "Administrator of the application",
+          email: "tarek.messaoudi@esprit.tn",
+          tel: "+216 58 674 830",
+          cin: "07480313",
+          ville: "Ariana",
+          dateNaissance: "10-07-1996",
           mdp: bcrypt.hashSync("Admin", 8),
-          confirmMdp: bcrypt.hashSync("Admin", 8),
+          confirmMdp: bcrypt.hashSync(mdp, 8),
           desactiver: false,
-          resettoken: "Admin",
-          disponibilite: "Admin",
-          rang: 0,
-          institut: "Admin",
-          specialite: "Admin",
-          bio: "Admin",
-          skills1: "Admin",
-          skills2: "Admin",
-          skills3: "Admin",
-          skills4: "Admin",
-          softSkills: "Admin",
-          paye: "Admin",
-          sex: "Admin",
+          paye: "Tunisia",
+          sex: "HOMME",
           roles: role._id,
-        })
-        .save((err) => {
+        }).save((err) => {
           if (err) {
             console.log(err);
           }
-          console.log("ADMINISTRATEUR Ajouté");
+          console.log("Added ADMINISTRATOR");
         });
       }
     });

@@ -7,100 +7,96 @@ const User = require("../Models/UserModel");
 
 app.use(cors());
 
-contactRouter
-  .route("/")
-  //http://localhost:9091/Contact
-  .post((req, res) => {
-    /*const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth:{
-            user: req.body.email,
-            pass: req.body.pass,
-        }
-    });*/
-    var transport = nodemailer.createTransport({
-      host: "smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "e2e4c0911d9792",
-        pass: "0ae8378ab2ea80",
-      },
-    });
-    const mailOptions = {
-      from: req.body.email,
-      to: "tarek.messaoudi@esprit.tn",
-      subject: req.body.sujet,
-      text: req.body.message,
-    };
-    /*transporter.sendMail(mailOptions, function(err, info){
-        if(err){
-            console.log(err);
-            res.status(500).json(err)
-        } else {
-            console.log('Email sent : ' + info.response);
-            res.status(200).json(mailOptions);
-        }
-    });*/
-    transport.sendMail(mailOptions, function (err, info) {
-      if (err) {
+//http://localhost:9091/Contact
+contactRouter.route("/").post((req, res) => {
+  /*const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth:{
+      user: req.body.email,
+      pass: req.body.pass,
+    }
+  });*/
+  var transport = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: "e2e4c0911d9792",
+      pass: "0ae8378ab2ea80",
+    },
+  });
+  const mailOptions = {
+    from: req.body.email,
+    to: "tarek.messaoudi@esprit.tn",
+    subject: req.body.sujet,
+    text: req.body.message,
+  };
+  /*transporter.sendMail(mailOptions, function(err, info){
+      if(err){
         console.log(err);
-        res.status(500).json(err);
+        res.status(500).json(err)
       } else {
-        console.log("Email sent : " + info.response);
+        console.log('Email sent : ' + info.response);
         res.status(200).json(mailOptions);
       }
-    });
+    });*/
+  transport.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      console.log(err);
+      res.status(500).json(err);
+    } else {
+      console.log("Email sent : " + info.response);
+      res.status(200).json(mailOptions);
+    }
   });
+});
 
-contactRouter
-  .route("/send")
-  //http://localhost:9091/Contact/send
-  .post((req, res) => {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "tarek.messaoudi@esprit.tn",
-        pass: "curvanord193JMT5213",
-      },
-    });
-    /*var transport = nodemailer.createTransport({
-      host: "smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "e2e4c0911d9792",
-        pass: "0ae8378ab2ea80",
-      },
-    });*/
-    const mailOptions = {
-      from: "tarek.messaoudi@esprit.tn",
-      to: req.body.email,
-      subject: "Forgot Password !",
-      text: "vous pouver visitez ce site la : http://localhost:4200/home/login/updateMDP",
-    };
-    /*transporter.sendMail(mailOptions, function(err, info){
-        if(err){
-            console.log(err);
-            res.status(500).json(err)
-        } else {
-            console.log('Email sent : ' + info.response);
-            res.status(200).json(mailOptions);
-        }
-    });*/
-    User.findOne({ email: req.body.email }).exec((err, u) => {
-      if (u) {
-        transporter.sendMail(mailOptions, function (err, info) {
-          if (err) {
-            console.log(err);
-            res.status(500).json(err);
-          } else {
-            console.log("Email sent : " + info.response);
-            res.status(200).json(mailOptions);
-          }
-        });
-      } else {
-        res.sendStatus(404).json(err);
-      }
-    });
+//http://localhost:9091/Contact/send
+contactRouter.route("/send").post((req, res) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "tarek.messaoudi@esprit.tn",
+      pass: "curvanord193JMT5213",
+    },
   });
+  /*var transport = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: "e2e4c0911d9792",
+      pass: "0ae8378ab2ea80",
+    },
+  });*/
+  const mailOptions = {
+    from: "tarek.messaoudi@esprit.tn",
+    to: req.body.email,
+    subject: "Forgot Password !",
+    text: "vous pouver visitez ce site la : http://localhost:4200/home/login/updateMDP",
+  };
+  /*transporter.sendMail(mailOptions, function(err, info){
+    if(err){
+      console.log(err);
+      res.status(500).json(err)
+    } else {
+      console.log('Email sent : ' + info.response);
+      res.status(200).json(mailOptions);
+    }
+  });*/
+  User.findOne({ email: req.body.email }).exec((err, u) => {
+    if (u) {
+      transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          res.status(500).json(err);
+        } else {
+          console.log("Email sent : " + info.response);
+          res.status(200).json(mailOptions);
+        }
+      });
+    } else {
+      res.sendStatus(404).json(err);
+    }
+  });
+});
 
 module.exports = contactRouter;

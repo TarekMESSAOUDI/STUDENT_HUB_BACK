@@ -4,35 +4,31 @@ const SEX = require("./SexModel");
 
 const userModel = new Schema({
   nom: { type: String, required: true },
-  prenom: { type: String },
+  prenom: { type: String, required: true },
   titre: { type: String },
   email: { type: String },
   tel: { type: String },
   cin: { type: String, required: true },
+  paye: { type: String },
   ville: { type: String },
   rue: { type: String },
   codePostal: { type: Number },
-  dateNaissance: { type: Date, required: true, default: new Date() },
-  mdp: { type: String, default: new Date() },
-  confirmMdp: { type: String },
-  desactiver: { type: Boolean, default: 0 },
+  dateNaissance: { type: String, default: new Date().toLocaleDateString() },
+  mdp: { type: String, default: new Date().toLocaleDateString() },
+  confirmMdp: { type: String ,default: new Date().toLocaleDateString() },
+  desactiver: { type: Boolean, default: false },
   accessToken: [{ type: String, default: "" }],
   disponibilite: { type: String },
   rang: { type: Number },
   profileImage: { type: String, default: "PROFILE.jpeg" },
   coverImage: { type: String, default: "COVER.jpeg" },
   institutImage: { type: String, default: "ESEN.jpeg" },
-  institut: { type: String },
   bio: { type: String },
-  skills1: { type: String },
-  skills2: { type: String },
-  skills3: { type: String },
-  skills4: { type: String },
   softSkills: { type: String },
-  paye: { type: String },
-  sex: {
-    type: SEX,
-    ref: "Sex",
+  sex: {type: String, default: "NOt_SPECIFIED",},
+  institut: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", 
   },
   class: { 
     type: mongoose.Schema.Types.ObjectId,
@@ -42,16 +38,9 @@ const userModel = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Filiere",
   },
-  /*specialite:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Specialite",
-    default: "Tron_Commun"
-  },
-  niveau:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Niveau",
-    default: "No_Level"
-  },*/
+  skills: [
+    { type: String },
+  ],
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,
