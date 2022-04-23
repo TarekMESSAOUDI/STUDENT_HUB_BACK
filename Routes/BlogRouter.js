@@ -37,7 +37,7 @@ const image = multer({
 
 //http://localhost:9091/Blog/getAll
 blogRouter.route("/getAll").get((req, res) => {
-  Blog.find({}, (err, blogs) => {
+  Blog.find({masquer: false}, (err, blogs) => {
     if (err) {
       console.log(err)
       res.status(400).json(err);
@@ -48,13 +48,12 @@ blogRouter.route("/getAll").get((req, res) => {
 });
 
 //http://localhost:9091/Blog/addBlog/id
-blogRouter.route("/addBlog/:idUser").post(image.single("image"),(req, res) => {
+blogRouter.route("/addBlog/:idUser").post((req, res) => {
   User.findById(req.params.idUser ,(err,user)=>{
     const blog = new Blog({
       titre: req.body.titre,
       description: req.body.description,
       user: req.params.idUser,
-      image: req.file.originalname,
     });
     if(err){
       res.status(400)
@@ -63,6 +62,20 @@ blogRouter.route("/addBlog/:idUser").post(image.single("image"),(req, res) => {
       return res.status(200).json(blog)
     }
   })
+});
+
+//http://localhost:9091/Blog/Image/idBlog
+blogRouter.route("/Image/:idBlog").put(image.single("image"), (req, res) => {
+  Blog.findById(req.params.idBlog, (err, blog) => {
+    blog.image = req.file.originalname;
+    blog.masquer = false;
+    blog.save();
+    if (err) {
+      res.sendStatus(400);
+    } else {
+      res.json(blog);
+    }
+  });
 });
 
 //http://localhost:9091/blog/getById/idBlog

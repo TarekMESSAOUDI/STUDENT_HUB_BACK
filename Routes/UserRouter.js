@@ -111,6 +111,7 @@ userRouter.route("/signin").post((req, res) => {
       id: user.id,
       roles: authorities,
       accessToken: token,
+      profileImage: user.profileImage,
       class: user.class,
       institut: user.institut,
     });    
@@ -276,20 +277,16 @@ userRouter.route("/CountAdmin").get(async(req, res) => {
 //http://localhost:9091/User/signupUniversite
 userRouter.route("/signupUniversite").post((req, res) => {
   const universite = new User({
-    nom: req.body.acronym,
-    prenom: req.body.fullName,
+    nom: req.body.nom,
+    prenom: req.body.nom,
     titre: req.body.titre,
     tel: req.body.tel,
     cin: req.body.cin,
     email: req.body.email,
-    dateNaissance: req.body.dateCreation,
-    mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
-    confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
+    dateNaissance: req.body.dateNaissance,
+    mdp: bcrypt.hashSync(req.body.mdp, 8),
+    confirmMdp: bcrypt.hashSync(req.body.mdp, 8),
     paye: req.body.paye,
-    ville: req.body.ville,
-    rue: req.body.rue,
-    codePostal: req.body.codePostal,
-    specialite: req.body.specialite,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -299,6 +296,7 @@ userRouter.route("/signupUniversite").post((req, res) => {
       universite.save((err, user) => {
         if (err) {
           res.status(500).json({ message: err });
+          console.log(err);
           return;
         }
         Role.findOne({ nom: "UNIVERSITE" }, (err, role) => {

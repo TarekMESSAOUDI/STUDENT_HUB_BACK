@@ -94,7 +94,7 @@ contactRouter.route("/send").post((req, res) => {
         }
       });
     } else {
-      res.sendStatus(404).json(err);
+      res.status(404).json(err);
     }
   });
 });

@@ -22,7 +22,7 @@ const userModel = new Schema({
   rang: { type: Number },
   profileImage: { type: String, default: "PROFILE.jpeg" },
   coverImage: { type: String, default: "COVER.jpeg" },
-  institutImage: { type: String, default: "ESEN.jpeg" },
+  institutImage: { type: String, default: "INSTITUT.jpeg" },
   bio: { type: String },
   softSkills: { type: String },
   sex: {type: String, default: "NOt_SPECIFIED",},

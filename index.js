@@ -115,7 +115,7 @@ function initialeUser(role) {
           ville: "Ariana",
           dateNaissance: "10-07-1996",
           mdp: bcrypt.hashSync("Admin", 8),
-          confirmMdp: bcrypt.hashSync(mdp, 8),
+          confirmMdp: bcrypt.hashSync("Admin", 8),
           desactiver: false,
           paye: "Tunisia",
           sex: "HOMME",

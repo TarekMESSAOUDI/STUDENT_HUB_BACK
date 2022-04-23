@@ -49,11 +49,11 @@ commentaireRouter.route("/getByBlogId/:idBlog").get((req, res) => {
   }).populate("reponse").populate("user" , "nom prenom profileImage");
 });
 
-//http://localhost:9091/commentaire/addCommentaire/idBlog
-commentaireRouter.route("/addCommentaire/:idBlog").post((req, res) => {
+//http://localhost:9091/commentaire/addCommentaire/idBlog/idUser
+commentaireRouter.route("/addCommentaire/:idBlog/:idUser").post((req, res) => {
   const commentaire = new Commentaire({
     description: req.body.description,
-    user: req.body.user,
+    user: req.params.idUser,
     blog: req.params.idBlog,
   });
   commentaire.save((err, commentaire)=>{
