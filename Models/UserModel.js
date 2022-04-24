@@ -22,7 +22,7 @@ const userModel = new Schema({
   rang: { type: Number },
   profileImage: { type: String, default: "PROFILE.jpeg" },
   coverImage: { type: String, default: "COVER.jpeg" },
-  institutImage: { type: String, default: "INSTITUT.jpeg" },
+  institutImage: { type: String, default: "COVER.jpeg" },
   bio: { type: String },
   softSkills: { type: String },
   sex: {type: String, default: "NOt_SPECIFIED",},
@@ -38,9 +38,11 @@ const userModel = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Filiere",
   },
-  skills: [
-    { type: String },
-  ],
+  skills: 
+    {
+      type : new Array(6),
+      default : ["skills1", "skills2","skills3", "skills4","skills5", "skills6"],
+    },
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,

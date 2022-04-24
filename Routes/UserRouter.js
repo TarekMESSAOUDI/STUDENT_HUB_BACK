@@ -342,7 +342,7 @@ userRouter.route("/CountUniversite").get(async(req, res) => {
 ////////////////////////////////////ETUDIANT/////////////////////////////
 
 //http://localhost:9091/User/signupEtudiant
-userRouter.route("/signupEtudiant").post((req, res) => {
+userRouter.route("/signupEtudiant/:idUniversite/:idClass").post((req, res) => {
   const etudiant = new User({
     nom: req.body.nom,
     prenom: req.body.prenom,
@@ -350,9 +350,8 @@ userRouter.route("/signupEtudiant").post((req, res) => {
     dateNaissance: req.body.dateNaissance,
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
-    class: req.body.class,
-    institut: req.body.institut,
-    institutImage : req.body.institutImage,
+    class: req.params.idClass,
+    institut: req.params.idUniversite,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -404,6 +403,30 @@ userRouter.route("/CountEtudiant").get(async(req, res) => {
   });
 });
 
+//http://localhost:9091/User/CountEtudiantByUniversiteId/idUniversite
+userRouter.route("/CountEtudiantByUniversiteId/:idUniversite").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "ETUDIANT" });
+    User.count({institut: req.params.idUniversite, roles: ro._id},(err, number) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(number);
+        } 
+    });
+});
+
+//http://localhost:9091/User/countEtudiantByClassId/idClass
+userRouter.route("/countEtudiantByClassId/:idClass").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "ETUDIANT" });
+    User.count({class: req.params.idClass, roles: ro._id},(err, number) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(number);
+        } 
+    });
+});
+
 //http://localhost:9091/User/getEtudiantByClassId/idClass
 userRouter.route("/getEtudiantByClassId/:idClass").get( (req, res) => {
   User.find({ class: req.params.idClass }, (err, etudiants) => {
@@ -415,10 +438,22 @@ userRouter.route("/getEtudiantByClassId/:idClass").get( (req, res) => {
   }).populate("roles", "-__v").populate("class", "nom").populate("institut", "nom");
 });
 
+//http://localhost:9091/User/CountEtudiantByClassId/idClass
+userRouter.route("/CountEtudiantByClassId/:idUniversite").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "ETUDIANT" });
+    User.count({class: req.params.idClass, roles: ro._id},(err, number) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(number);
+        } 
+    });
+});
+
 ///////////////////////////////////ENSEIGNANT///////////////////////////
 
 //http://localhost:9091/User/signupEnseignat
-userRouter.route("/signupEnseignat").post((req, res) => {
+userRouter.route("/signupEnseignant/:idUniversite").post((req, res) => {
   const enseignant = new User({
     nom: req.body.nom,
     prenom: req.body.prenom,
@@ -426,8 +461,7 @@ userRouter.route("/signupEnseignat").post((req, res) => {
     dateNaissance: req.body.dateNaissance,
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance,8),
-    class: req.body.class,
-    institut: req.body.institut,
+    institut: req.params.idUniversite,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -465,7 +499,19 @@ userRouter.route("/getAllEnseignant").get(async (req, res) => {
     if (err) {
       res.status(400).json(err);
     } else {
-      res.staus(200).json(enseignants);
+      res.status(200).json(enseignants);
+    }
+  });
+});
+
+//http://localhost:9091/User/getEnseignantByUniversiteId/idUniversite
+userRouter.route("/getEnseignantByUniversiteId/:idUniversite").get(async (req, res) => {
+  let en = await Role.find({ nom: "ENSEIGNANT" });
+  User.find({institut: req.params.idUniversite, roles: en }, (err, enseignants) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(enseignants);
     }
   });
 });
@@ -479,21 +525,33 @@ userRouter.route("/CountEnseignant").get(async(req, res) => {
   });
 });
 
+//http://localhost:9091/User/CountEnseignantByUniversiteId/idUniversite
+userRouter.route("/CountEnseignantByUniversiteId/:idUniversite").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "ENSEIGNANT" });
+    User.count({institut: req.params.idUniversite, roles: ro._id},(err, number) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(number);
+        } 
+    });
+});
 //////////////////////////////////CLUB/////////////////////////////////
 
 //http://localhost:9091/User/signupClub
-userRouter.route("/signupClub").post((req, res) => {
+userRouter.route("/signupClub/:idUniversite").post((req, res) => {
   const club = new User({
-    nom: req.body.acronym,
-    prenom: req.body.fullName,
+    nom: req.body.nom,
+    prenom: req.body.prenom,
     titre: req.body.titre,
     tel: req.body.tel,
     cin: req.body.cin,
     email: req.body.email,
-    dateNaissance: req.body.dateCreation,
+    dateNaissance: req.body.dateNaissance,
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     specialite: req.body.specialite,
+    institut : req.params.idUniversite,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -543,6 +601,18 @@ userRouter.route("/CountClub").get(async(req, res) => {
     res.json(number);
     return number;
   });
+});
+
+//http://localhost:9091/User/CountClubByUniversiteId/idUniversite
+userRouter.route("/CountClubByUniversiteId/:idUniversite").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "CLUB" });
+    User.count({institut: req.params.idUniversite, roles: ro._id},(err, number) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(number);
+        } 
+    });
 });
 
 module.exports = userRouter;

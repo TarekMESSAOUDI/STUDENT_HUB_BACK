@@ -54,6 +54,25 @@ blogRouter.route("/addBlog/:idUser").post((req, res) => {
       titre: req.body.titre,
       description: req.body.description,
       user: req.params.idUser,
+      masquer: true
+    });
+    if(err){
+      res.status(400)
+    } else {
+      blog.save();
+      return res.status(200).json(blog)
+    }
+  })
+});
+
+//http://localhost:9091/Blog/ajouterBlog/idUser
+blogRouter.route("/ajouterBlog/:idUser").post((req, res) => {
+  User.findById(req.params.idUser ,(err,user)=>{
+    const blog = new Blog({
+      titre: req.body.titre,
+      description: req.body.description,
+      masquer: false,
+      user: req.params.idUser,
     });
     if(err){
       res.status(400)
