@@ -2,73 +2,145 @@ const express = require("express");
 const commentaireRouter = express.Router();
 const Commentaire = require("../Models/CommentaireModel");
 const Blog = require("../Models/BlogModel");
+const { json } = require("swig/lib/filters");
+var ObjectId = require("mongoose").Types.ObjectId;
 
-commentaireRouter
-  .route("/")
-  //get all commentaires
-  //http://localhost:9091/commentaire
-  .get((req, res) => {
-    Commentaire.find({}, (err, commentaires) => {
-      if (err) {
-        res.status(400).json(err);
-      } else {
-        res.status(200).json(commentaires);
-      }
-    });
+//http://localhost:9091/commentaire/getAll
+commentaireRouter.route("/getAll").get((req, res) => {
+  Commentaire.find({}, (err, commentaires) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(commentaires);
+    }
+  }).populate("reponse");
+});
+
+//http://localhost:9091/commentaire/getById/idCommentaire
+commentaireRouter.route("/getById/:idCommentaire").get((req, res) => {
+  Commentaire.findById({_id : req.params.idCommentaire}, (err, commentaires) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(commentaires);
+    }
+  }).populate("reponse", "description -_id").populate("user");
+});
+
+//http://localhost:9091/commentaire/getReponseByIdCommentaire/idCommentaire
+commentaireRouter.route("/getReponseByIdCommentaire/:idCommentaire").get((req, res) => {
+  Commentaire.find({reponse : req.params.idCommentaire}, (err, commentaires) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(commentaires);
+    }
+  }).populate("user", "nom prenom profileImage");
+});
+
+//http://localhost:9091/commentaire/getByBlogId/idBlog
+commentaireRouter.route("/getByBlogId/:idBlog").get((req, res) => {
+  Commentaire.find({blog : req.params.idBlog}, (err, commentaires) => {
+    if (err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(commentaires);
+    }
+  }).populate("reponse").populate("user" , "nom prenom profileImage");
+});
+
+//http://localhost:9091/commentaire/addCommentaire/idBlog/idUser
+commentaireRouter.route("/addCommentaire/:idBlog/:idUser").post((req, res) => {
+  const commentaire = new Commentaire({
+    description: req.body.description,
+    user: req.params.idUser,
+    blog: req.params.idBlog,
   });
-
-commentaireRouter
-  .route("/:id")
-  // add commentaire to blog
-  //http://localhost:9091/commentaire/id
-  .post((req, res) => {
-    let commentaire = new Commentaire(req.body);
-    return Commentaire.create(commentaire).then((docCommentaire) => {
-      return Blog.findByIdAndUpdate(
-        req.params.id,
-        {
-          $push: { commentaire: docCommentaire._id },
-        },
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-    });
+  commentaire.save(async(err, commentaire)=>{
+    if(err){
+      res.status(400).json(err);
+    } else {
+      let b = await Blog.findById(req.params.idBlog);
+      b.commentaires.push(commentaire._id);
+      b.nombreCommentaire = b.nombreCommentaire + 1;
+      b.save();
+      res.status(200).json(commentaire);
+    }
   });
+});
 
-commentaireRouter
-  .route("/Reponse/:id")
-  // repondre a commentaire
-  //http://localhost:9091/commentaire/Reponse/id
-  .post((req, res) => {
-    let commentaire = new Commentaire(req.body);
-    return Commentaire.create(commentaire).then((docCommentaire) => {
-      return Commentaire.findByIdAndUpdate(
-        req.params.id,
-        {
-          $push: { commentaire: docCommentaire._id },
-        },
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-    });
+//http://localhost:9091/commentaire/Reponse/idCommentaire
+commentaireRouter.route("/Reponse/:idCommentaire").post((req, res) => {
+  let reponse = new Commentaire(req.body);
+  reponse.reponse = req.params.idCommentaire;
+  reponse.save((err, reponse) =>{
+    if(err){
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(reponse);
+    }
   });
+});
 
-commentaireRouter
-  .route("/:id")
-  //http://localhost:9091/commentaire/id
-  .delete((req, res) => {
-    Commentaire.findById(req.params.id, (err, commentaire) => {
-      commentaire.delete((err) => {
-        if (err) {
-          res.status(500).send(err);
+//http://localhost:9091/commentaire/deleteCommentaire/idCommentaire
+commentaireRouter.route("/deleteCommentaire/:idCommentaire").delete((req, res) => {
+  Commentaire.findByIdAndDelete(req.params.idCommentaire, (err, commentaire) => {
+    if(err){
+      res.status(400).json(err);
+    } else {
+      Commentaire.deleteMany({reponse: req.params.idCommentaire}, (errr, reponse) => {
+        if(errr){
+          res.status(400).json(errr);
         } else {
-          res.status(204).send("removed");
+          res.status(200).json(commentaire)
         }
-      });
-    });
+      })
+    }
   });
+});
+
+//http://localhost:9091/Commentaire/Update/idCommentaire
+commentaireRouter.route("/Update/:idCommentaire").put((req, res) => {
+    if (!ObjectId.isValid(req.params.idCommentaire)){
+        return res.status(400).json(`Pas d'enregistrement avec ce ID : ${req.params.idCommentaire}`);
+    } else {
+        Commentaire.findByIdAndUpdate(
+            req.params.idCommentaire,{ 
+                $set: req.body 
+            },
+            { 
+                new: true 
+            },(err, doc) => {
+                if (!err) {
+                    res.send(doc);
+                } else {
+                    console.log("Error in User Update :" + JSON.stringify(err, undefined, 2));
+                }
+            }
+        ).populate("reponse");
+    }
+});
+
+//http://localhost:9091/Commentaire/CountCommentaireByBlogId/idBlog
+commentaireRouter.route("/CountCommentaireByBlogId/:idBlog").get((req, res) => {
+  Commentaire.count({blog: req.params.idBlog}, (err, number) => {
+    if(err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(number);
+    }
+  });
+});
+
+//http://localhost:9091/Commentaire/CountCommentaire
+commentaireRouter.route("/CountCommentaire").get((req, res) => {
+  Commentaire.count({}, (err, number) => {
+    if(err) {
+      res.status(400).json(err);
+    } else {
+      res.status(200).json(number);
+    }
+  });
+});
+
 module.exports = commentaireRouter;

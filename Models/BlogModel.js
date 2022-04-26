@@ -4,18 +4,21 @@ const Schema = mongoose.Schema;
 const blogModel = new Schema({
   titre: { type: String, required: true },
   description: { type: String, required: true },
-  date: { type: Date, default: new Date() },
-  image: { type: String },
+  date: { type: String, default: new Date().toLocaleDateString() },
+  image: { type: String, default: "BLOG.jpeg", required: false },
+  like: {type: Number, default: 0},
+  masquer: {type: Boolean, default: true},
+  nombreCommentaire: {type: Number, default:0},
   user: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  commentaire: [
+  commentaires: [
     {
-      type: mongoose.Schema.Types.Array,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Commentaire",
-    },
-  ],
+    }
+  ]
 });
 
 module.exports = mongoose.model("Blog", blogModel);

@@ -2,51 +2,53 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const SEX = require("./SexModel");
 
-let userModel = new Schema({
+const userModel = new Schema({
   nom: { type: String, required: true },
-  prenom: { type: String },
+  prenom: { type: String, required: true },
   titre: { type: String },
   email: { type: String },
   tel: { type: String },
   cin: { type: String, required: true },
+  paye: { type: String },
   ville: { type: String },
   rue: { type: String },
   codePostal: { type: Number },
-  dateNaissance: { type: Date, required: true, default: new Date() },
-  mdp: { type: String, default: new Date() },
-  confirmMdp: { type: String },
-  desactiver: { type: Boolean, default: 0 },
+  dateNaissance: { type: String, default: new Date().toLocaleDateString() },
+  mdp: { type: String, default: new Date().toLocaleDateString() },
+  confirmMdp: { type: String ,default: new Date().toLocaleDateString() },
+  desactiver: { type: Boolean, default: false },
   accessToken: [{ type: String, default: "" }],
   disponibilite: { type: String },
   rang: { type: Number },
   profileImage: { type: String, default: "PROFILE.jpeg" },
   coverImage: { type: String, default: "COVER.jpeg" },
-  institutImage: { type: String, default: "ESEN.jpeg" },
-  institut: { type: String },
-  specialite: { type: String },
+  institutImage: { type: String, default: "COVER.jpeg" },
   bio: { type: String },
-  skills1: { type: String },
-  skills2: { type: String },
-  skills3: { type: String },
-  skills4: { type: String },
   softSkills: { type: String },
-  paye: { type: String },
-  sex: {
-    type: SEX,
-    ref: "Sex",
+  sex: {type: String, default: "NOt_SPECIFIED",},
+  institut: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", 
   },
+  class: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Class",
+  },
+  filiere:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Filiere",
+  },
+  skills: 
+    {
+      type : new Array(6),
+      default : ["skills1", "skills2","skills3", "skills4","skills5", "skills6"],
+    },
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
     },
   ],
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Blog",
-    },
-  ],
 });
 
-module.exports = mongoose.model("Users", userModel);
+module.exports = mongoose.model("User", userModel);
