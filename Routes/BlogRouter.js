@@ -44,7 +44,7 @@ blogRouter.route("/getAll").get((req, res) => {
     } else {
       res.status(200).json(blogs);
     }
-  }).populate("user", "nom prenom profileImage");
+  }).populate("user", "nom prenom profileImage").populate("commentaires");
 });
 
 //http://localhost:9091/Blog/addBlog/id
@@ -97,6 +97,23 @@ blogRouter.route("/Image/:idBlog").put(image.single("image"), (req, res) => {
   });
 });
 
+//http://localhost:9091/Blog/idBlog
+blogRouter.route("/update/:idBlog").put((req, res) => {
+  Blog.findById(req.params.idBlog, (err, blog) => {
+    if (blog) {
+      blog.titre = req.body.titre,
+      blog.description = req.body.description,
+      blog.date = new Date().toLocaleDateString();
+      blog.save();
+    } else {
+      blog = new Blog(req.body);
+      blog.save();
+      res.status(201);
+    }
+    res.json(blog);
+  });
+});
+
 //http://localhost:9091/blog/getById/idBlog
 blogRouter.route("/getById/:idBlog").get((req, res) => {
   Blog.findById(req.params.idBlog, (err, blog) => {
@@ -109,7 +126,7 @@ blogRouter.route("/getById/:idBlog").get((req, res) => {
   }).populate("user", "nom prenom profileImage");
 });
 
-//http://localhost:9091/blog/findByUserId/idUser
+//http://localhost:9091/blog/getByUserId/idUser
 blogRouter.route("/getByUserId/:idUser").get((req, res) => {
   Blog.find({user: req.params.idUser}, (err, blog) => {
     if (err) {
@@ -117,7 +134,7 @@ blogRouter.route("/getByUserId/:idUser").get((req, res) => {
     } else {
       res.json(blog);
     }
-  }).populate("user", "nom prenom profileImage");
+  }).populate("user", "nom prenom image");
 });
 
 //http://localhost:9091/blog/delete/idBlog
@@ -163,13 +180,40 @@ blogRouter.route("/CountBlog").get((req, res) => {
 blogRouter.route("/LikeBlog/:idBlog").put((req, res) => {
   Blog.findByIdAndUpdate(req.params.idBlog,{},{ new: true },(err, blog) => {
     if(err){
-      res.Status(400) 
+      res.status(400) 
     } else {
       blog.like = blog.like + 1;
       blog.save();
       res.status(200).json(blog);
     }
   });
+});
+
+//http://localhost:9091/Blog/LikeBlog/idBlog
+blogRouter.route("/disLikeBlog/:idBlog").put((req, res) => {
+  Blog.findByIdAndUpdate(req.params.idBlog,{},{ new: true },(err, blog) => {
+    if(err){
+      res.Status(400) 
+    } else {
+      blog.like = blog.like - 1;
+      blog.save();
+      res.status(200).json(blog);
+    }
+  });
+});
+
+//http://localhost:9091/blog/masquer/idBlog
+blogRouter.route("/masquer/:idBlog").put((req, res) => {
+    Blog.findByIdAndUpdate(req.params.idBlog,{},{ new: true },(err, blog) => {
+      if (!err) {
+        blog.masquer = !blog.masquer;
+        blog.save();
+        res.send(blog);
+      } else {
+        console.log("Error in User Update :" + JSON.stringify(err, undefined, 2));
+      }
+    }
+  ).populate("user", "-__v");
 });
 
 module.exports = blogRouter;

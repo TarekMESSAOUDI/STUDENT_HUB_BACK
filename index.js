@@ -111,15 +111,23 @@ function initialeUser(role) {
           titre: "Administrator of the application",
           email: "tarek.messaoudi@esprit.tn",
           tel: "+216 58 674 830",
+          paye: "TUNISIA",
           cin: "07480313",
           ville: "Ariana",
+          rue: "1642",
+          codePostal: "2041",
           dateNaissance: "10-07-1996",
           mdp: bcrypt.hashSync("Admin", 8),
           confirmMdp: bcrypt.hashSync("Admin", 8),
           desactiver: false,
-          paye: "Tunisia",
+          bio: "Welcome To My Profile",
+          softSkills: "Adminstrator of Android Club At ESEN",
           sex: "HOMME",
           roles: role._id,
+          institut: role._id,
+          class: role._id,
+          filiere: role._id,
+          
         }).save((err) => {
           if (err) {
             console.log(err);

@@ -190,11 +190,49 @@ userRouter.route("/delete/:idUser").delete((req, res) => {
 
 //http://localhost:9091/User/update/idUser
 userRouter.route("/update/:idUser").put((req, res) => {
+    User.findById(req.params.idUser,(err, u) => {
+      if (u) {
+        u.nom = req.body.nom;
+        u.prenom = req.body.prenom;
+        u.titre = req.body.titre;
+        u.email = req.body.email;
+        u.tel = req.body.tel;
+        u.dateNaissance = req.body.dateNaissance;
+        u.cin = req.body.cin;
+        u.skills = req.body.skills,
+        console.log(u)
+        u.save();
+        res.send(u);
+      } else {
+        let user = new User(req.body);
+        user.save();
+        res.status(201).json(user);
+      }
+    }).populate("roles", "-__v").populate("class", "nom").populate("institut", "nom");
+  }
+);
+
+//http://localhost:9091/User/updateProfile/idUser
+userRouter.route("/updateProfile/:idUser").put((req, res) => {
   if (!ObjectId.isValid(req.params.idUser))
     return res.status(400).send(`Pas d'enregistrement avec ce ID : ${req.params.idUser}`);
     User.findByIdAndUpdate(req.params.idUser,{ $set: req.body },{ new: true },(err, doc) => {
       if (!err) {
         res.send(doc);
+      } else {
+        console.log("Error in User Update :" + JSON.stringify(err, undefined, 2));
+      }
+    }
+  ).populate("roles", "-__v").populate("class", "nom").populate("institut", "nom");
+});
+
+//http://localhost:9091/User/activer/idUser
+userRouter.route("/activer/:idUser").put((req, res) => {
+    User.findByIdAndUpdate(req.params.idUser,{},{ new: true },(err, user) => {
+      if (!err) {
+        user.desactiver = !user.desactiver;
+        user.save();
+        res.send(user);
       } else {
         console.log("Error in User Update :" + JSON.stringify(err, undefined, 2));
       }
@@ -550,7 +588,6 @@ userRouter.route("/signupClub/:idUniversite").post((req, res) => {
     dateNaissance: req.body.dateNaissance,
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
-    specialite: req.body.specialite,
     institut : req.params.idUniversite,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
@@ -601,6 +638,18 @@ userRouter.route("/CountClub").get(async(req, res) => {
     res.json(number);
     return number;
   });
+});
+
+//http://localhost:9091/User/getClubByUniversiteId/idUniversite
+userRouter.route("/getClubByUniversiteId/:idUniversite").get(async(req, res) => {
+  let ro = await Role.findOne({ nom: "CLUB" });
+    User.find({institut: req.params.idUniversite, roles: ro._id},(err, clubs) => {
+        if(err){
+            res.status(400).json(err);
+        } else {
+            res.status(200).json(clubs);
+        } 
+    });
 });
 
 //http://localhost:9091/User/CountClubByUniversiteId/idUniversite

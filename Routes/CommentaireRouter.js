@@ -56,10 +56,14 @@ commentaireRouter.route("/addCommentaire/:idBlog/:idUser").post((req, res) => {
     user: req.params.idUser,
     blog: req.params.idBlog,
   });
-  commentaire.save((err, commentaire)=>{
+  commentaire.save(async(err, commentaire)=>{
     if(err){
       res.status(400).json(err);
     } else {
+      let b = await Blog.findById(req.params.idBlog);
+      b.commentaires.push(commentaire._id);
+      b.nombreCommentaire = b.nombreCommentaire + 1;
+      b.save();
       res.status(200).json(commentaire);
     }
   });

@@ -58,7 +58,7 @@ classRouter.route("/getClassByNiveauId/:idNiveau").get((req,res)=>{
 classRouter.route("/CountClassByNiveauId/:idNiveau").get(async(req, res) => {
     Class.count({niveau: req.params.idNiveau},(err, number) => {
         if(err){
-            res.Status(400) 
+            res.status(400) 
         } else {
             return res.status(200).json(number);
         }
