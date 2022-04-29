@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 const port = 9091;
 const userRouter = require("./Routes/UserRouter");
+const salleRouter = require("./Routes/SalleRouter");
 const blogRouter = require("./Routes/BlogRouter");
 const commentaireRouter = require("./Routes/CommentaireRouter");
 const contactRouter = require("./Routes/ContactRouter");
@@ -15,6 +16,7 @@ const filiereRouter = require("./Routes/FiliereRouter");
 const niveauRouter = require("./Routes/NiveauRouter");
 const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const Role = require("./Models/RoleModel");
+const Salle = require("./Models/SalleModel");
 const User = require("./Models/UserModel");
 const Blog = require("./Models/BlogModel");
 const Class = require("./Models/ClassModel");
@@ -48,6 +50,7 @@ app.use("/Class", classRouter);
 app.use("/Filiere", filiereRouter);
 app.use("/Niveau", niveauRouter);
 app.use("/Specialite", specialiteRouter);
+app.use("/Salle", salleRouter);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

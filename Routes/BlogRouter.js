@@ -90,9 +90,9 @@ blogRouter.route("/Image/:idBlog").put(image.single("image"), (req, res) => {
     blog.masquer = false;
     blog.save();
     if (err) {
-      res.sendStatus(400);
+      res.status(400).json(err);
     } else {
-      res.json(blog);
+      res.status(200).json(blog);
     }
   });
 });
@@ -105,6 +105,7 @@ blogRouter.route("/update/:idBlog").put((req, res) => {
       blog.description = req.body.description,
       blog.date = new Date().toLocaleDateString();
       blog.save();
+      res.status(200);
     } else {
       blog = new Blog(req.body);
       blog.save();

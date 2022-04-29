@@ -380,8 +380,8 @@ userRouter.route("/CountUniversite").get(async(req, res) => {
 ////////////////////////////////////ETUDIANT/////////////////////////////
 
 //http://localhost:9091/User/signupEtudiant
-userRouter.route("/signupEtudiant/:idUniversite/:idClass").post((req, res) => {
-  const etudiant = new User({
+userRouter.route("/signupEtudiant/:idUniversite/:idClass/:institutImage").post(async(req, res) => {
+  const etudiant =  new User ({
     nom: req.body.nom,
     prenom: req.body.prenom,
     cin: req.body.cin,
@@ -390,6 +390,7 @@ userRouter.route("/signupEtudiant/:idUniversite/:idClass").post((req, res) => {
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     class: req.params.idClass,
     institut: req.params.idUniversite,
+    institutImage: req.params.institutImage,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -491,7 +492,7 @@ userRouter.route("/CountEtudiantByClassId/:idUniversite").get(async(req, res) =>
 ///////////////////////////////////ENSEIGNANT///////////////////////////
 
 //http://localhost:9091/User/signupEnseignat
-userRouter.route("/signupEnseignant/:idUniversite").post((req, res) => {
+userRouter.route("/signupEnseignant/:idUniversite/:institutImage").post((req, res) => {
   const enseignant = new User({
     nom: req.body.nom,
     prenom: req.body.prenom,
@@ -500,6 +501,7 @@ userRouter.route("/signupEnseignant/:idUniversite").post((req, res) => {
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance,8),
     institut: req.params.idUniversite,
+    institutImage: req.params.institutImage,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
@@ -577,7 +579,7 @@ userRouter.route("/CountEnseignantByUniversiteId/:idUniversite").get(async(req, 
 //////////////////////////////////CLUB/////////////////////////////////
 
 //http://localhost:9091/User/signupClub
-userRouter.route("/signupClub/:idUniversite").post((req, res) => {
+userRouter.route("/signupClub/:idUniversite/:institutImage").post((req, res) => {
   const club = new User({
     nom: req.body.nom,
     prenom: req.body.prenom,
@@ -589,6 +591,7 @@ userRouter.route("/signupClub/:idUniversite").post((req, res) => {
     mdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     confirmMdp: bcrypt.hashSync(req.body.dateNaissance, 8),
     institut : req.params.idUniversite,
+    institutImage: req.params.institutImage,
   });
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
