@@ -34,7 +34,6 @@ const image = multer({
   },
   fileFilter: fileFilter,
 });
-
 //http://localhost:9091/Blog/getAll
 blogRouter.route("/getAll").get((req, res) => {
   Blog.find({masquer: false}, (err, blogs) => {

@@ -7,6 +7,9 @@ const app = express();
 const port = 9091;
 const userRouter = require("./Routes/UserRouter");
 const salleRouter = require("./Routes/SalleRouter");
+const matiereRouter = require("./Routes/MatiereRouter");
+const eventRouter = require("./Routes/EventRouter");
+
 const blogRouter = require("./Routes/BlogRouter");
 const commentaireRouter = require("./Routes/CommentaireRouter");
 const contactRouter = require("./Routes/ContactRouter");
@@ -17,6 +20,9 @@ const niveauRouter = require("./Routes/NiveauRouter");
 const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const Role = require("./Models/RoleModel");
 const Salle = require("./Models/SalleModel");
+const Matiere= require("./Models/MatiereModel");
+const Event= require("./Models/EventModel");
+
 const User = require("./Models/UserModel");
 const Blog = require("./Models/BlogModel");
 const Class = require("./Models/ClassModel");
@@ -51,6 +57,8 @@ app.use("/Filiere", filiereRouter);
 app.use("/Niveau", niveauRouter);
 app.use("/Specialite", specialiteRouter);
 app.use("/Salle", salleRouter);
+app.use("/Matiere", matiereRouter);
+app.use("/Event", eventRouter);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
