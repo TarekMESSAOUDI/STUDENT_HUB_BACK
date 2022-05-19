@@ -1,5 +1,4 @@
 const express = require("express");
-const { orderBy, groupBy } = require("lodash");
 const matiereRouter = express.Router();
 const Matiere = require("../Models/MatiereModel");
 const User = require("../Models/UserModel");
@@ -45,7 +44,7 @@ matiereRouter.route("/countMatByUniversiteId/:idUniversite").get((req, res) => {
   });
 });
 
-//http://localhost:9091/Matiere/deleteMatiere/idSalle
+//http://localhost:9091/Matiere/deleteMatiere/idMatiere
 matiereRouter.route("/deleteMatiere/:idMatiere").delete((req, res) => {
   Matiere.deleteOne({_id: req.params.idMatiere}, (err, Matiere) => {
     if (err) {
