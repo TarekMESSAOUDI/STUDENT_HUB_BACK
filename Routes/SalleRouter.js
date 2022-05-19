@@ -14,7 +14,7 @@ salleRouter.route("/addSalle/:idUniversite").post((req, res) => {
             user: req.params.idUniversite,
         });
         if(err){
-            res.status(400).json(err);
+            res.status(401).json(err);
             console.log(err);
         } else {
             salle.save();
