@@ -108,7 +108,7 @@ classRouter.route("/delete/:idClass").delete((req, res) => {
         if(errr) {
           res.status(400).json(errr)
         } else {
-          res.status(200).json(classe);
+          res.status(200).json("classe deleted Successfuly !");
         }
       });
     }

@@ -392,6 +392,7 @@ userRouter.route("/signupEtudiant/:idUniversite/:idClass/:institutImage").post(a
     institut: req.params.idUniversite,
     institutImage: req.params.institutImage,
   });
+
   User.findOne({ cin: req.body.cin }).exec((err, user) => {
     if (user) {
       res.status(400).json({ message: "Faild! CIN Alredy In Use !" });

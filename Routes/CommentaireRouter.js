@@ -92,7 +92,7 @@ commentaireRouter.route("/deleteCommentaire/:idCommentaire").delete((req, res) =
         if(errr){
           res.status(400).json(errr);
         } else {
-          res.status(200).json(commentaire)
+          res.status(200).json("commentaire deleted Succefully")
         }
       })
     }

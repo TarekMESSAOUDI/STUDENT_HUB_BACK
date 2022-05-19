@@ -34,7 +34,6 @@ const image = multer({
   },
   fileFilter: fileFilter,
 });
-
 //http://localhost:9091/Blog/getAll
 blogRouter.route("/getAll").get((req, res) => {
   Blog.find({masquer: false}, (err, blogs) => {
@@ -97,7 +96,7 @@ blogRouter.route("/Image/:idBlog").put(image.single("image"), (req, res) => {
   });
 });
 
-//http://localhost:9091/Blog/idBlog
+//http://localhost:9091/Blog/update/idBlog
 blogRouter.route("/update/:idBlog").put((req, res) => {
   Blog.findById(req.params.idBlog, (err, blog) => {
     if (blog) {
