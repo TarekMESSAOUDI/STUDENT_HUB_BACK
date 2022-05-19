@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const blogModel = new Schema({
+const EventModel = new Schema({
   titre: { type: String, required: true },
   description: { type: String, required: true },
   date: { type: String, default: new Date().toLocaleDateString() },
-  image: { type: String, default: "BLOG.jpeg", required: false },
+  image: { type: String, default: "Event.png", required: false },
   like: {type: Number, default: 0},
   masquer: {type: Boolean, default: true},
   nombreCommentaire: {type: Number, default:0},
@@ -21,4 +21,4 @@ const blogModel = new Schema({
   ]
 });
 
-module.exports = mongoose.model("Blog", blogModel);
+module.exports = mongoose.model("Event",EventModel);
