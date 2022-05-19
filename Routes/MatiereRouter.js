@@ -3,23 +3,24 @@ const matiereRouter = express.Router();
 const Matiere = require("../Models/MatiereModel");
 const User = require("../Models/UserModel");
 
+
 //http://localhost:9091/Matiere/addMatiere/idUniversite
-matiereRouter.route("/addMatiere/:idUniversite").post((req, res) => {
-    User.findById(req.params.idUniversite ,(err,user)=>{
-        const matiere = new Matiere({
-            nom: req.body.nom,
-            coef: req.body.coef,
-            user: req.params.idUniversite,
-        });
-        if(err){
-            res.status(400).json(err);
-            console.log(err);
-        } else {
-            matiere.save();
-            res.status(200).json(matiere)
-        }
+matiereRouter.route("/addmatiere/:idUniversite").post((req, res) => {
+  User.findById(req.params.idUniversite ,(err,user)=>{
+    const matiere = new Matiere({
+      nom: req.body.nom,
+      coef: req.body.coef,
+      user: req.params.idUniversite,
     });
+    if(err){
+      res.status(400)
+    } else {
+      matiere.save();
+      return res.status(200).json(matiere)
+    }
+  })
 });
+
 
 //http://localhost:9091/Matiere/getMatByUniversiteId/idUniversite
 matiereRouter.route("/getMatByUniversiteId/:idUniversite").get((req, res) => {

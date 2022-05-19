@@ -8,6 +8,9 @@ const port = 9091;
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
+const matiereRouter = require("./Routes/MatiereRouter");
+const eventRouter = require("./Routes/EventRouter");
+
 const blogRouter = require("./Routes/BlogRouter");
 const commentaireRouter = require("./Routes/CommentaireRouter");
 const contactRouter = require("./Routes/ContactRouter");
@@ -19,6 +22,9 @@ const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
 const Role = require("./Models/RoleModel");
 const Salle = require("./Models/SalleModel");
+const Matiere= require("./Models/MatiereModel");
+const Event= require("./Models/EventModel");
+
 const User = require("./Models/UserModel");
 const Blog = require("./Models/BlogModel");
 const Class = require("./Models/ClassModel");
@@ -57,6 +63,8 @@ app.use("/Specialite", specialiteRouter);
 app.use("/Salle", salleRouter);
 app.use("/Matiere", matiereRouter);
 app.use("/Seance", seanceRouter);
+app.use("/Event", eventRouter);
+
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
