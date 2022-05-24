@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const blogModel = new Schema({
-  titre: { type: String, required: true },
-  description: { type: String, required: true },
+  titre: { type: String },
+  description: { type: String },
   date: { type: String, default: new Date().toLocaleDateString() },
   image: { type: String, default: "BLOG.jpeg", required: false },
   like: {type: Number, default: 0},

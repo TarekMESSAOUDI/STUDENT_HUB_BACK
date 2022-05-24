@@ -29,17 +29,14 @@ const userModel = new Schema({
   institut: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 
-    default: null,
   },
   class: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "Class",
-    default: null,
   },
   filiere:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Filiere",
-    default: null,
   },
   skills: 
     {
@@ -50,7 +47,6 @@ const userModel = new Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
-      default: null,
     },
   ],
 });

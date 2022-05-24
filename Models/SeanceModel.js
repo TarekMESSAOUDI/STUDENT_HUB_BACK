@@ -1,11 +1,12 @@
 const { times } = require("lodash");
 const mongoose = require("mongoose");
+const DateTime = require("node-datetime/src/datetime");
 const Schema = mongoose.Schema;
 
 let seanceModel = new Schema({
-    type: { type: String },
-    startAt:{type: Date, default: new Date()},
-    endAt:{type: Date, default: new Date()},
+    title: { type: String },
+    start:{type: String, default: new Date().toISOString()},
+    end:{type: String, default: new Date().toISOString()},
     matiere: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: "Matiere"

@@ -8,9 +8,7 @@ const port = 9091;
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
-const matiereRouter = require("./Routes/MatiereRouter");
 const eventRouter = require("./Routes/EventRouter");
-
 const blogRouter = require("./Routes/BlogRouter");
 const commentaireRouter = require("./Routes/CommentaireRouter");
 const contactRouter = require("./Routes/ContactRouter");
@@ -22,9 +20,7 @@ const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
 const Role = require("./Models/RoleModel");
 const Salle = require("./Models/SalleModel");
-const Matiere= require("./Models/MatiereModel");
 const Event= require("./Models/EventModel");
-
 const User = require("./Models/UserModel");
 const Blog = require("./Models/BlogModel");
 const Class = require("./Models/ClassModel");
@@ -128,8 +124,8 @@ function initialeUser(role) {
           titre: "Administrator of the application",
           email: "tarek.messaoudi@esprit.tn",
           tel: "+216 58 674 830",
+          cin: "00480313",
           paye: "TUNISIA",
-          cin: "07480313",
           ville: "Ariana",
           rue: "1642",
           codePostal: "2041",
@@ -137,13 +133,19 @@ function initialeUser(role) {
           mdp: bcrypt.hashSync("Admin", 8),
           confirmMdp: bcrypt.hashSync("Admin", 8),
           desactiver: false,
+          accessToken: "",
+          disponibilite: "",
+          rang: 0,
+          profileImage: "PROFILE.jpeg",
+          coverImage: "COVER.jpeg" ,
+          institutImage: "COVER.jpeg",
           bio: "Welcome To My Profile",
           softSkills: "Adminstrator of Android Club At ESEN",
           sex: "HOMME",
-          roles: role._id,
           institut: role._id,
           class: role._id,
           filiere: role._id,
+          roles: role._id,
           
         }).save((err) => {
           if (err) {
