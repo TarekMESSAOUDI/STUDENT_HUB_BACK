@@ -1,6 +1,4 @@
-const { times } = require("lodash");
 const mongoose = require("mongoose");
-const DateTime = require("node-datetime/src/datetime");
 const Schema = mongoose.Schema;
 
 let seanceModel = new Schema({

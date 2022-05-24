@@ -26,7 +26,7 @@ seanceRouter.route("/AddSeance/:idUniversite").post((req, res) => {
       let mat = await Matiere.findById(seance.matiere)
       let sal = await Salle.findById(seance.salle)
       let ens = await User.findById(seance.enseignant)
-      seance.title = req.body.title + ": " + mat.nom + " " + sal.bloc + sal.etage + sal.numero + " (M." + ens.nom + " " + ens.prenom + ")",
+      seance.title =await  req.body.title + ": " + mat.nom + " " + sal.bloc + sal.etage + sal.numero + " (M." + ens.nom + " " + ens.prenom + ")",
       seance.save();
       res.status(200).json(seance)
     }
@@ -80,6 +80,17 @@ seanceRouter.route("/getByIdEnseignant/:idEnseignant").get((req, res) => {
     .populate("salle", "numero bloc etage -_id")
     .populate("class", "nom -_id")
     .populate("matiere", "nom -_id");
+});
+
+//http://localhost:9091/Seance/deleteSeance/idSeance
+seanceRouter.route("/deleteSeance/:idSeance").delete((req, res) => {
+  Seance.findByIdAndDelete((req.params.idSeance),(err, seance) => {
+    if(err){
+      res.status(400).json(err);
+    } else {
+      res.status(200).json("Seance Deleted Succefully");
+    }
+  });
 });
 
 module.exports = seanceRouter;

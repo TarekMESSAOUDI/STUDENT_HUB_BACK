@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const port = 9091;
+
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
@@ -18,6 +19,8 @@ const filiereRouter = require("./Routes/FiliereRouter");
 const niveauRouter = require("./Routes/NiveauRouter");
 const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
+const noteRouter = require("./Routes/NoteRouter");
+
 const Role = require("./Models/RoleModel");
 const Salle = require("./Models/SalleModel");
 const Event= require("./Models/EventModel");
@@ -30,6 +33,8 @@ const Niveau = require("./Models/NiveauModel");
 const Specialite = require("./Models/SpecialiteModel");
 const Matiere = require("./Models/MatiereModel");
 const Seance = require("./Models/SeanceModel");
+const Note = require("./Models/NoteModel");
+
 var bcrypt = require("bcryptjs");
 
 mongoose
@@ -60,6 +65,7 @@ app.use("/Salle", salleRouter);
 app.use("/Matiere", matiereRouter);
 app.use("/Seance", seanceRouter);
 app.use("/Event", eventRouter);
+app.use("/Note", noteRouter);
 
 
 app.listen(port, () => {
