@@ -51,7 +51,9 @@ eventRouter.route("/getAll").get((req, res) => {
 eventRouter.route("/addEvent/:idUser").post((req, res) => {
   User.findById(req.params.idUser ,(err,user)=>{
     const event = new Event({
-      titre: req.body.titre,
+      title: req.body.title,
+      start: req.body.start,
+      end: req.body.end,
       description: req.body.description,
       user: req.params.idUser,
       masquer: true
@@ -69,8 +71,10 @@ eventRouter.route("/addEvent/:idUser").post((req, res) => {
 eventRouter.route("/ajouterEvent/:idUser").post((req, res) => {
   User.findById(req.params.idUser ,(err,user)=>{
     const event = new Event({
-      titre: req.body.titre,
+      title: req.body.title,
       description: req.body.description,
+      start: req.body.start,
+      end: req.body.end,
       masquer: false,
       user: req.params.idUser,
     });
@@ -97,12 +101,14 @@ eventRouter.route("/Image/:idEvent").put(image.single("image"), (req, res) => {
   });
 });
 
-//http://localhost:9091/Event/idEvent
+//http://localhost:9091/Event/update/idEvent
 eventRouter.route("/update/:idEvent").put((req, res) => {
   Event.findById(req.params.idEvent, (err, event) => {
     if (event) {
-      event.titre = req.body.titre,
+      event.title = req.body.title,
       event.description = req.body.description,
+      event.start = req.body.start,
+      event.end = req.body.end,
       event.date = new Date().toLocaleDateString();
       event.save();
       res.status(200);
@@ -190,7 +196,7 @@ eventRouter.route("/LikeEvent/:idEvent").put((req, res) => {
   });
 });
 
-//http://localhost:9091/Event/LikeEvent/idEvent
+//http://localhost:9091/Event/disLikeEvent/idEvent
 eventRouter.route("/disLikeEvent/:idEvent").put((req, res) => {
   Event.findByIdAndUpdate(req.params.idEvent,{},{ new: true },(err, event) => {
     if(err){

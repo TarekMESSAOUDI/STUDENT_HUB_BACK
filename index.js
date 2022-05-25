@@ -5,11 +5,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const port = 9091;
+var bcrypt = require("bcryptjs");
+
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
 const eventRouter = require("./Routes/EventRouter");
-
 const blogRouter = require("./Routes/BlogRouter");
 const commentaireRouter = require("./Routes/CommentaireRouter");
 const contactRouter = require("./Routes/ContactRouter");
@@ -19,20 +20,10 @@ const filiereRouter = require("./Routes/FiliereRouter");
 const niveauRouter = require("./Routes/NiveauRouter");
 const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
-const Role = require("./Models/RoleModel");
-const Salle = require("./Models/SalleModel");
-const Event= require("./Models/EventModel");
+const noteRouter = require("./Routes/NoteRouter");
 
+const Role = require("./Models/RoleModel");
 const User = require("./Models/UserModel");
-const Blog = require("./Models/BlogModel");
-const Class = require("./Models/ClassModel");
-const Commentaire = require("./Models/CommentaireModel");
-const Filiere = require("./Models/FiliereModel");
-const Niveau = require("./Models/NiveauModel");
-const Specialite = require("./Models/SpecialiteModel");
-const Matiere = require("./Models/MatiereModel");
-const Seance = require("./Models/SeanceModel");
-var bcrypt = require("bcryptjs");
 
 mongoose
   .connect("mongodb://localhost:27017/StudentHub", { useNewUrlParser: true })
@@ -62,6 +53,7 @@ app.use("/Salle", salleRouter);
 app.use("/Matiere", matiereRouter);
 app.use("/Seance", seanceRouter);
 app.use("/Event", eventRouter);
+app.use("/Note", noteRouter);
 
 
 app.listen(port, () => {
@@ -126,8 +118,8 @@ function initialeUser(role) {
           titre: "Administrator of the application",
           email: "tarek.messaoudi@esprit.tn",
           tel: "+216 58 674 830",
+          cin: "00480313",
           paye: "TUNISIA",
-          cin: "07480313",
           ville: "Ariana",
           rue: "1642",
           codePostal: "2041",
@@ -135,7 +127,13 @@ function initialeUser(role) {
           mdp: bcrypt.hashSync("Admin", 8),
           confirmMdp: bcrypt.hashSync("Admin", 8),
           desactiver: false,
-          bio: "Welcome To My Profile",
+          accessToken: "",
+          disponibilite: "",
+          rang: 0,
+          profileImage: "PROFILE.jpeg",
+          coverImage: "COVER.jpeg" ,
+          institutImage: "COVER.jpeg",
+          bio: "Welcome To My Profile I am the Administrator of The Application for more information you can visite Get In Touch",
           softSkills: "Adminstrator of Android Club At ESEN",
           sex: "HOMME",
           roles: role._id,
