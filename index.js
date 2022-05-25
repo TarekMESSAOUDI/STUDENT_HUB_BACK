@@ -8,7 +8,6 @@ const port = 9091;
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
-const matiereRouter = require("./Routes/MatiereRouter");
 const eventRouter = require("./Routes/EventRouter");
 
 const blogRouter = require("./Routes/BlogRouter");
@@ -22,7 +21,6 @@ const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
 const Role = require("./Models/RoleModel");
 const Salle = require("./Models/SalleModel");
-const Matiere= require("./Models/MatiereModel");
 const Event= require("./Models/EventModel");
 
 const User = require("./Models/UserModel");
