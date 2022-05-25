@@ -7,7 +7,7 @@ const User = require("../Models/UserModel");
 noteRouter.route("/addNote/:idUser").post((req, res) => {
     User.findById(req.params.idUser ,async(err,user)=>{
     const note = new Note({
-      title: req.body.title,
+      title: req.body.title + " : " + req.body.description,
       start: req.body.start,
       end: req.body.end,
       description :req.body.description,

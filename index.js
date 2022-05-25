@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const port = 9091;
+var bcrypt = require("bcryptjs");
 
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
@@ -22,20 +23,7 @@ const matiereRouter = require("./Routes/MatiereRouter");
 const noteRouter = require("./Routes/NoteRouter");
 
 const Role = require("./Models/RoleModel");
-const Salle = require("./Models/SalleModel");
-const Event= require("./Models/EventModel");
 const User = require("./Models/UserModel");
-const Blog = require("./Models/BlogModel");
-const Class = require("./Models/ClassModel");
-const Commentaire = require("./Models/CommentaireModel");
-const Filiere = require("./Models/FiliereModel");
-const Niveau = require("./Models/NiveauModel");
-const Specialite = require("./Models/SpecialiteModel");
-const Matiere = require("./Models/MatiereModel");
-const Seance = require("./Models/SeanceModel");
-const Note = require("./Models/NoteModel");
-
-var bcrypt = require("bcryptjs");
 
 mongoose
   .connect("mongodb://localhost:27017/StudentHub", { useNewUrlParser: true })
@@ -145,13 +133,13 @@ function initialeUser(role) {
           profileImage: "PROFILE.jpeg",
           coverImage: "COVER.jpeg" ,
           institutImage: "COVER.jpeg",
-          bio: "Welcome To My Profile",
+          bio: "Welcome To My Profile I am the Administrator of The Application for more information you can visite Get In Touch",
           softSkills: "Adminstrator of Android Club At ESEN",
           sex: "HOMME",
+          roles: role._id,
           institut: role._id,
           class: role._id,
           filiere: role._id,
-          roles: role._id,
           
         }).save((err) => {
           if (err) {

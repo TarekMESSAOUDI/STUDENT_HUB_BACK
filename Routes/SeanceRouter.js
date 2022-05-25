@@ -18,7 +18,7 @@ seanceRouter.route("/AddSeance/:idUniversite").post((req, res) => {
       enseignant: req.body.enseignant,
       universite: req.params.idUniversite,
       salle: req.body.salle,
-      class: req.body.class,
+      classs: req.body.classs,
     });
     if(err){
       res.status(401)
@@ -46,13 +46,13 @@ seanceRouter.route("/getByIdUniversite/:idUniversite").get((req, res) => {
   }).populate("universite", "nom -_id")
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
-    .populate("class", "nom -_id")
+    .populate("classs", "nom -_id")
     .populate("matiere", "nom -_id");
 });
 
 //http://localhost:9091/Seance/getByIdClass/idClass
 seanceRouter.route("/getByIdClass/:idClass").get((req, res) => {
-  Seance.find({class: req.params.idClass}, (err, seance) => {
+  Seance.find({classs: req.params.idClass}, (err, seance) => {
     if (err) {
       res.status(401).json(err);
       console.log(err);
@@ -62,7 +62,7 @@ seanceRouter.route("/getByIdClass/:idClass").get((req, res) => {
   }).populate("universite", "nom -_id")
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
-    .populate("class", "nom -_id")
+    .populate("classs", "nom -_id")
     .populate("matiere", "nom -_id");
 });
 
@@ -78,7 +78,7 @@ seanceRouter.route("/getByIdEnseignant/:idEnseignant").get((req, res) => {
   }).populate("universite", "nom -_id")
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
-    .populate("class", "nom -_id")
+    .populate("Class", "nom -_id")
     .populate("matiere", "nom -_id");
 });
 

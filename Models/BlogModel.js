@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const blogModel = new Schema({
   titre: { type: String },
   description: { type: String },
-  date: { type: String, default: new Date().toLocaleDateString() },
+  date: { type: String, default: new Date().toISOString() },
   image: { type: String, default: "BLOG.jpeg", required: false },
   like: {type: Number, default: 0},
   masquer: {type: Boolean, default: true},

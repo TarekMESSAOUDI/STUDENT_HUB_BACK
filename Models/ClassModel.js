@@ -6,6 +6,10 @@ let classModel = new Schema({
     niveau: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Niveau",
+    },
+    universite: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     }
 });
 

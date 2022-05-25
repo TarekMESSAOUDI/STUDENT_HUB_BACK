@@ -21,7 +21,7 @@ let seanceModel = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Salle",
     },
-    class:{
+    classs:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Class",
     },
