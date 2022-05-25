@@ -13,9 +13,9 @@ const userModel = new Schema({
   ville: { type: String },
   rue: { type: String },
   codePostal: { type: Number },
-  dateNaissance: { type: String, default: new Date().toLocaleDateString() },
-  mdp: { type: String, default: new Date().toLocaleDateString() },
-  confirmMdp: { type: String ,default: new Date().toLocaleDateString() },
+  dateNaissance: { type: String, default: new Date().toISOString() },
+  mdp: { type: String, default: new Date().toISOString() },
+  confirmMdp: { type: String ,default: new Date().toISOString() },
   desactiver: { type: Boolean, default: false },
   accessToken: [{ type: String, default: "" }],
   disponibilite: { type: String },
@@ -29,17 +29,14 @@ const userModel = new Schema({
   institut: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 
-    default: null,
   },
   class: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "Class",
-    default: null,
   },
   filiere:{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Filiere",
-    default: null,
   },
   skills: 
     {
@@ -50,7 +47,6 @@ const userModel = new Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
-      default: null,
     },
   ],
 });
