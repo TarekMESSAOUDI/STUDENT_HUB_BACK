@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 let commentaireModel=new Schema({
     description:{type:String,required:true},
     like:{type:Number, default: 0},
-    date:{type:String, default:new Date().toLocaleDateString()},
+    date:{type:String, default:new Date().toISOString()},
     masquer:{type:Boolean, default: false},
     user:{
         type: mongoose.Schema.Types.ObjectId,

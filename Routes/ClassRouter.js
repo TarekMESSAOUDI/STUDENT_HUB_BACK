@@ -27,8 +27,8 @@ classRouter.route("/getClassById/:idClass").get((req, res) => {
     }).populate("niveau");
 });
 
-//http://localhost:9091/Class/addClass/idNiveau
-classRouter.route("/addClass/:idNiveau").post((req, res) => {
+//http://localhost:9091/Class/addClass/idNiveau/idUniversite
+classRouter.route("/addClass/:idNiveau/:idUniversite").post((req, res) => {
     Niveau.findById(req.params.idNiveau ,(err,niveau)=>{
         if(err) {
             res.status(400).json(err);
@@ -36,6 +36,7 @@ classRouter.route("/addClass/:idNiveau").post((req, res) => {
             const classe = new Class({
             nom: req.body.nom,
             niveau: req.params.idNiveau,
+            universite: req.params.idUniversite,
         });
         classe.save();
         res.status(200).json(classe)
@@ -46,6 +47,17 @@ classRouter.route("/addClass/:idNiveau").post((req, res) => {
 //http://localhost:9091/Class/getClassByNiveauId/idNiveau
 classRouter.route("/getClassByNiveauId/:idNiveau").get((req,res)=>{
     Class.find({niveau: req.params.idNiveau},(err, classe)=>{
+        if(err){
+            return res.sendStatus(400)
+        } else {
+            return res.status(200).json(classe)
+        }
+    }).populate("niveau");
+});
+
+//http://localhost:9091/Class/getClassByUniversiteId/idUniversite
+classRouter.route("/getClassByUniversiteId/:idUniversite").get((req,res)=>{
+    Class.find({universite: req.params.idUniversite},(err, classe)=>{
         if(err){
             return res.sendStatus(400)
         } else {
