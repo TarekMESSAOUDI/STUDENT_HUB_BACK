@@ -156,42 +156,43 @@ function initialeUser(role) {
             from: "tarek.messaoudi@esprit.tn",
             to: "tarek.messaoudi@esprit.tn",
             subject: "Account Available !",
-            html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                  <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-                  <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <meta name="x-apple-disable-message-reformatting">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
-                    <title></title>
-                    <style type="text/css">
-                      @media only screen and (min-width: 620px) {
-                        .u-row {
-                          width: 600px !important;
-                        }
-                        .u-row .u-col {
-                          vertical-align: top;
-                        }
-                        .u-row .u-col-100 {
-                          width: 600px !important;
-                        }
-                      }
-                      @media (max-width: 620px) {
-                      .u-row-container {
-                        max-width: 100% !important;
-                        padding-left: 0px !important;
-                        padding-right: 0px !important;
+            html: `
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+    <head>
+                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <meta name="x-apple-disable-message-reformatting">
+                  <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+                  <title></title>
+                  <style type="text/css">
+                    @media only screen and (min-width: 620px) {
+                      .u-row {
+                        width: 600px !important;
                       }
                       .u-row .u-col {
-                        min-width: 320px !important;
-                        max-width: 100% !important;
-                        display: block !important;
+                        vertical-align: top;
                       }
-                      .u-row {
-                        width: calc(100% - 40px) !important;
+                      .u-row .u-col-100 {
+                        width: 600px !important;
                       }
-                      .u-col {
-                        width: 100% !important;
+                    }
+                    @media (max-width: 620px) {
+                    .u-row-container {
+                    max-width: 100% !important;
+                    padding-left: 0px !important;
+                    padding-right: 0px !important;
+                    }
+                    .u-row .u-col {
+                      min-width: 320px !important;
+                      max-width: 100% !important;
+                      display: block !important;
+                    }
+                    .u-row {
+                      width: calc(100% - 40px) !important;
+                    }
+                    .u-col {
+                      width: 100% !important;
                       }
                       .u-col > div {
                         margin: 0 auto;
@@ -546,6 +547,7 @@ function initialeUser(role) {
               }
             });
           console.log("Added ADMINISTRATOR");
+          console.log("an email containing the connection information has been sent to the address");
         });
       }
     });
