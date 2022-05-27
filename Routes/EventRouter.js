@@ -54,6 +54,7 @@ eventRouter.route("/addEvent/:idUser").post((req, res) => {
       title: req.body.title,
       start: req.body.start,
       end: req.body.end,
+      location: req.body.location,
       description: req.body.description,
       user: req.params.idUser,
       masquer: true
@@ -73,6 +74,7 @@ eventRouter.route("/ajouterEvent/:idUser").post((req, res) => {
     const event = new Event({
       title: req.body.title,
       description: req.body.description,
+      location: req.body.location,
       start: req.body.start,
       end: req.body.end,
       masquer: false,
@@ -107,6 +109,7 @@ eventRouter.route("/update/:idEvent").put((req, res) => {
     if (event) {
       event.title = req.body.title,
       event.description = req.body.description,
+      event.location= req.body.location,
       event.start = req.body.start,
       event.end = req.body.end,
       event.date = new Date().toLocaleDateString();

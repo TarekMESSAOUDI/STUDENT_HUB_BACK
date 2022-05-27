@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const EventModel = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
+  location: { type: String, required: true },
   date: { type: String, default: new Date().toISOString() },
   start: { type: String, default: new Date().toISOString() },
   end: { type: String, default: new Date().toISOString() },
