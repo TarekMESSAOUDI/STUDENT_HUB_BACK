@@ -22,6 +22,8 @@ const niveauRouter = require("./Routes/NiveauRouter");
 const specialiteRouter = require("./Routes/SpecialiteRoutes");
 const matiereRouter = require("./Routes/MatiereRouter");
 const noteRouter = require("./Routes/NoteRouter");
+const demandeDocumentRouter = require("./Routes/DemandeDocumentRouter");
+const documentRouter = require("./Routes/DocumentRouter");
 
 const Role = require("./Models/RoleModel");
 const User = require("./Models/UserModel");
@@ -55,6 +57,8 @@ app.use("/Matiere", matiereRouter);
 app.use("/Seance", seanceRouter);
 app.use("/Event", eventRouter);
 app.use("/Note", noteRouter);
+app.use("/DemandeDocument", demandeDocumentRouter);
+app.use("/Document", documentRouter);
 
 
 app.listen(port, () => {

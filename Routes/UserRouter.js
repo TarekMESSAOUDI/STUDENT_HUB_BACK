@@ -578,7 +578,7 @@ userRouter.route("/signupUniversite").post((req, res) => {
                                           <tr>
                                             <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 20px;font-family:'Open Sans',sans-serif;" align="left">
                                               <div style="color: #333333; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                <p style="font-size: 14px; line-height: 140%;"><strong>Login: </strong> ${etudiant.cin}<span style="color: #828080; font-size: 14px; line-height: 19.6px;">.</span></p>
+                                                <p style="font-size: 14px; line-height: 140%;"><strong>Login: </strong> ${universite.cin}<span style="color: #828080; font-size: 14px; line-height: 19.6px;">.</span></p>
                                               </div>
                                             </td>
                                           </tr>

@@ -78,7 +78,7 @@ seanceRouter.route("/getByIdEnseignant/:idEnseignant").get((req, res) => {
   }).populate("universite", "nom -_id")
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
-    .populate("Class", "nom -_id")
+    .populate("classs")
     .populate("matiere", "nom -_id");
 });
 
