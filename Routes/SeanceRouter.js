@@ -47,7 +47,7 @@ seanceRouter.route("/getByIdUniversite/:idUniversite").get((req, res) => {
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
     .populate("classs", "nom -_id")
-    .populate("matiere", "nom -_id");
+    .populate("matiere");
 });
 
 //http://localhost:9091/Seance/getByIdClass/idClass
@@ -78,7 +78,7 @@ seanceRouter.route("/getByIdEnseignant/:idEnseignant").get((req, res) => {
   }).populate("universite", "nom -_id")
     .populate("enseignant", "nom prenom -_id")
     .populate("salle", "numero bloc etage -_id")
-    .populate("Class", "nom -_id")
+    .populate("classs")
     .populate("matiere", "nom -_id");
 });
 
