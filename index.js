@@ -8,6 +8,7 @@ const port = 9091;
 const nodemailer = require("nodemailer");
 var bcrypt = require("bcryptjs");
 
+const periodeRouter = require("./Routes/PeriodeRouter");
 const userRouter = require("./Routes/UserRouter");
 const seanceRouter = require("./Routes/SeanceRouter");
 const salleRouter = require("./Routes/SalleRouter");
@@ -24,6 +25,7 @@ const matiereRouter = require("./Routes/MatiereRouter");
 const noteRouter = require("./Routes/NoteRouter");
 const demandeDocumentRouter = require("./Routes/DemandeDocumentRouter");
 const documentRouter = require("./Routes/DocumentRouter");
+
 
 const Role = require("./Models/RoleModel");
 const User = require("./Models/UserModel");
@@ -59,6 +61,7 @@ app.use("/Event", eventRouter);
 app.use("/Note", noteRouter);
 app.use("/DemandeDocument", demandeDocumentRouter);
 app.use("/Document", documentRouter);
+app.use("/Periode", periodeRouter);
 
 
 app.listen(port, () => {
