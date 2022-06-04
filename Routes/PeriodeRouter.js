@@ -29,7 +29,7 @@ periodeRouter.route("/getByUniversiteId/:idUniversite").get((req, res) => {
     } else {
       res.json(periode);
     }
-  }).populate("universite", "nom prenom profileImage");
+  }).populate("universite", "nom prenom profileImage").sort("start");
 });
 
 
