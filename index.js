@@ -69,7 +69,7 @@ app.use("/Document", documentRouter);
 app.use("/Periode", periodeRouter);
 
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
   console.log(`http://localhost:${port}`);
 });
 
