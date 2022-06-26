@@ -30,8 +30,10 @@ const documentRouter = require("./Routes/DocumentRouter");
 const Role = require("./Models/RoleModel");
 const User = require("./Models/UserModel");
 
+// pikoro2022 pikoro
+
 mongoose
-  .connect("mongodb://localhost:27017/StudentHub", { useNewUrlParser: true })
+  .connect("mongodb+srv://pikoro:pikoro2022@cluster0.go3assg.mongodb.net/?retryWrites=true&w=majority", { useNewUrlParser: true })
   .then(async () => {
     let rl = await initialeRole();
     initialeUser(rl);
