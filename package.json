@@ -1,12 +1,11 @@
 {
   "name": "studenthubback",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --verbose --watchAll"
+    "test": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +14,6 @@
     "concurrently": "^7.0.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
-    "ts-jest": "^27.1.3",
     "typescript": "^4.6.2"
   },
   "dependencies": {
@@ -26,7 +24,11 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "@types/jest": "^27.4.1",
     "express": "^4.17.3",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.6.2",
     "express-mailer": "^0.3.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -37,5 +39,18 @@
     "node-datetime": "^2.1.2",
     "nodemailer": "^6.7.3",
     "swig": "^1.4.2"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TarekMESSAOUDI/STUDENT_HUB_BACK.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/TarekMESSAOUDI/STUDENT_HUB_BACK/issues"
+  },
+  "homepage": "https://github.com/TarekMESSAOUDI/STUDENT_HUB_BACK#readme",
+  "description": ""
 }

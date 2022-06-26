@@ -36,7 +36,10 @@ mongoose
     let rl = await initialeRole();
     initialeUser(rl);
   });
-app.use(cors());
+app.use(cors({
+  origin: [process.env.website_url],
+  optionsSuccessStatus: 200, // For legacy browser support
+}));
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
