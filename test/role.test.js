@@ -1,7 +1,7 @@
-const User = require("../Routes/UserRouter");
+const Role = require("../Routes/RoleRouter");
 
 describe("Add", () =>{
     it("should retrieve a user", () =>{
-        expect(User.put);
+        expect(Role.post);
     });
 });
